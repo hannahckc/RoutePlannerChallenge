@@ -20,8 +20,6 @@ jobs:
       - name: Initialize Terraform
         run: |
               terraform init
-              curl https://registry.terraform.io/
-
         working-directory: terraform
 
       - name: Validate Terraform
