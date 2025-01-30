@@ -3,7 +3,7 @@ name: Deploy Terraform
 on:
   push:
     branches:
-      - origin/createApp
+      - createApp
 
 jobs:
   terraform:
