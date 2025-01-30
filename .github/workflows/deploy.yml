@@ -17,6 +17,9 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+      - name: Change to terraform directory
+        run: cd terraform
+
       - name: Initialize Terraform
         run: terraform init
 
