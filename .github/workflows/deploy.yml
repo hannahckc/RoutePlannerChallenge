@@ -31,7 +31,9 @@ jobs:
         working-directory: terraform
 
       - name: Plan Terraform
-        run: terraform plan
+        run: |
+              export TF_LOG=DEBUG
+              terraform plan
         working-directory: terraform
 
       - name: Apply Terraform Configuration
