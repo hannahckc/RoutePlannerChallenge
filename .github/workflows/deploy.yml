@@ -25,7 +25,6 @@ jobs:
       - name: Initialize Terraform
         run: |
               terraform init
-              ping ec2.amazonaws.com
               curl https://registry.terraform.io/
 
         working-directory: terraform
@@ -36,6 +35,8 @@ jobs:
 
       - name: Plan Terraform
         run: |
+              echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
+              echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
               export TF_LOG=DEBUG
               terraform plan
         working-directory: terraform
