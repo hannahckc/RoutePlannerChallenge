@@ -23,7 +23,11 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Initialize Terraform
-        run: terraform init
+        run: |
+              terraform init
+              ping ec2.amazonaws.com
+              curl https://registry.terraform.io/
+
         working-directory: terraform
 
       - name: Validate Terraform
