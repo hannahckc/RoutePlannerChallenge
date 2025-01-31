@@ -22,16 +22,19 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+
       - name: Initialize Terraform
         run: |
               terraform init
         working-directory: terraform
 
+      - name: Kill Stuck Terraform Processes
+        run: pkill -f terraform || true
+
       - name: Validate Terraform
         run: |
               echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
               echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
-              export TF_LOG=DEBUG
               terraform validate
         working-directory: terraform
         
@@ -45,6 +48,7 @@ jobs:
               echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
               echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
               export TF_LOG=DEBUG
+              export TF_LOG_PATH=terraform-debug.log
               terraform plan
         working-directory: terraform
 
