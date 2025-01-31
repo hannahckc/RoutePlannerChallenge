@@ -10,6 +10,11 @@ jobs:
     name: Apply Terraform Configuration
     runs-on: self-hosted
 
+    env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -29,10 +34,11 @@ jobs:
               export TF_LOG=DEBUG
               terraform validate
         working-directory: terraform
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
+        
+
+      - name: Check AWS Credentials
+        run: aws sts get-caller-identity
+
 
       - name: Plan Terraform
         run: |
@@ -41,15 +47,7 @@ jobs:
               export TF_LOG=DEBUG
               terraform plan
         working-directory: terraform
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Apply Terraform Configuration
         run: terraform apply -auto-approve
         working-directory: terraform
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
