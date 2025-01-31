@@ -3,13 +3,6 @@ provider "aws" {
   region     = var.aws_region
   access_key = var.aws_access_key_id
   secret_key = var.aws_secret_access_key
-  max_retries = 3 # Adjust as needed
-  timeout {
-    create = "10m"
-    update = "10m"
-    delete = "10m"
-  }
-
 }
 
 # Define an EC2 instance
