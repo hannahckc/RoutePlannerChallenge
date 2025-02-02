@@ -32,6 +32,8 @@ resource "aws_instance" "routePlanner" {
 }
 
 resource "aws_db_instance" "postgresdb" {
+  username          = var.db_username
+  password          = var.db_password
   allocated_storage    = 20            # Storage in GB
   instance_class    = "db.t4g.micro"  # Database instance type
   engine               = "postgres"     # PostgreSQL engine

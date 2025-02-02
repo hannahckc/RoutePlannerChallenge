@@ -29,6 +29,14 @@ resource "aws_security_group" "django_sg" {
     cidr_blocks = ["0.0.0.0/0"]  # Use a more restrictive range in production (e.g., your IP)
   }
 
+  # Allow connections for Potsgres
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Open to the world (you may restrict this)
+  }
+
   # Outbound rule to allow all outbound traffic
   egress {
     from_port   = 0
