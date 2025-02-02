@@ -24,18 +24,11 @@ jobs:
 
 
       - name: Initialize Terraform
-        run: |
-              terraform init
+        run: terraform init
         working-directory: terraform
 
-      - name: Kill Stuck Terraform Processes
-        run: pkill -f terraform || true
-
       - name: Validate Terraform
-        run: |
-              echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
-              echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
-              terraform validate
+        run: terraform validate
         working-directory: terraform
         
 
@@ -44,12 +37,7 @@ jobs:
 
 
       - name: Plan Terraform
-        run: |
-              echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
-              echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
-              export TF_LOG=DEBUG
-              export TF_LOG_PATH=terraform-debug.log
-              terraform plan
+        run: terraform plan
         working-directory: terraform
 
       - name: Apply Terraform Configuration
