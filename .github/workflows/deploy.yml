@@ -35,11 +35,6 @@ jobs:
       - name: Validate Terraform
         run: terraform validate
         working-directory: terraform
-        
-
-      - name: Check AWS Credentials
-        run: aws sts get-caller-identity
-
 
       - name: Plan Terraform
         run: terraform plan
