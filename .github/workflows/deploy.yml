@@ -57,3 +57,8 @@ jobs:
       #  run: |
       #      PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h my-rds-endpoint.amazonaws.com -U ${{ secrets.DB_USERNAME }} -d mydatabase -f database/init.sql
       #  working-directory: sql
+
+      - name: Destroy 
+        run: terraform destroy
+        working-directory: terraform
+
