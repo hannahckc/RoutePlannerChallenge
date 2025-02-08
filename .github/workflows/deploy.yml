@@ -49,3 +49,11 @@ jobs:
       - name: Apply Terraform Configuration
         run: terraform apply -auto-approve
         working-directory: terraform
+
+      - name: Install PostgreSQL Client
+        run: sudo apt-get install -y postgresql-client
+
+      #- name: Run SQL Script
+      #  run: |
+      #      PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h my-rds-endpoint.amazonaws.com -U ${{ secrets.DB_USERNAME }} -d mydatabase -f database/init.sql
+      #  working-directory: sql

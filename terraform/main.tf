@@ -39,6 +39,7 @@ resource "aws_db_instance" "postgresdb" {
   identifier = "my-postgresdb-instance"  # This is your DB instance name
   username          = var.db_username
   password          = var.db_password
+  db_name = gatedb
 
   # Make instance private (set to false for public access)
   publicly_accessible    = false
