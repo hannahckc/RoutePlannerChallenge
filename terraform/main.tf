@@ -15,6 +15,7 @@ data "aws_ami" "latest_arm_ami" {
 
 # Provider Configuration
 provider "aws" {
+  key_name = "routePlannerTest"
 
 }
 
