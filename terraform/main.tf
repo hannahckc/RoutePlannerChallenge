@@ -15,13 +15,13 @@ data "aws_ami" "latest_arm_ami" {
 
 # Provider Configuration
 provider "aws" {
-  key_name = "routePlannerTest"
 
 }
 
 resource "aws_instance" "routePlanner" {
   ami           = data.aws_ami.latest_arm_ami.id
   instance_type = "t4g.micro"  # ARM64-compatible instance
+  key_name = "routePlannerTest"
 
   tags = {
     # Name that will appear on AWS console
