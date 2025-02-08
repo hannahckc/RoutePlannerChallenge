@@ -73,7 +73,7 @@ jobs:
 
       - name: Run SQL Script on RDS
         run: |
-          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h ${{ env.RDS_HOST }} -U ${{ secrets.DB_USERNAME }} -d gatedb -p ${{ env.RDS_PORT }} -f /path/to/your/database_script.sql
+          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h ${{ env.RDS_HOST }} -U ${{ secrets.DB_USERNAME }} -d gatedb -p ${{ env.RDS_PORT }} -f sql/create-local-postgres-db.sql
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
