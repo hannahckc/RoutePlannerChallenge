@@ -37,6 +37,8 @@ resource "aws_db_instance" "postgresdb" {
   engine               = "postgres"     # PostgreSQL engine
   engine_version       = "17.2"         # PostgreSQL version
   identifier = "my-postgresdb-instance"  # This is your DB instance name
+  username          = var.db_username
+  password          = var.db_password
 
   # Make instance private (set to false for public access)
   publicly_accessible    = false
