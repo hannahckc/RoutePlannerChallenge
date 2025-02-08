@@ -51,7 +51,9 @@ jobs:
         working-directory: terraform
 
       - name: Install PostgreSQL Client
-        run: sudo apt-get install -y postgresql-client
+        run: |
+            brew update
+            brew install postgresql
 
       #- name: Run SQL Script
       #  run: |
