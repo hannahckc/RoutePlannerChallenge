@@ -30,8 +30,8 @@ jobs:
 
       - name: Generate terraform.tfvars file
         run: |
-          echo "db_username = \"${{ secrets.DB_USERNAME }}\"" > terraform/terraform.tfvars
-          echo "db_password = \"${{ secrets.DB_PASSWORD }}\"" >> terraform/terraform.tfvars
+          echo "db_username = \"${{ secrets.DB_USERNAME }}\"" >> terraform.tfvars
+          echo "db_password = \"${{ secrets.DB_PASSWORD }}\"" >> terraform.tfvars
         working-directory: terraform
 
       - name: Initialize Terraform
