@@ -37,15 +37,12 @@ resource "aws_instance" "routePlanner" {
 
               # Create database and user
               sudo -u postgres psql -c "CREATE DATABASE gatedb;"
-              sudo -u postgres psql -c "CREATE USER ${var.db_username} WITH PASSWORD '${var.db_password}';"
-              sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE gatedb TO ${var.db_username};"
-
               
               # Save the SQL script to a file on the EC2 instance
               echo "${file("${path.module}/create-local-postgres-db.sql")}" > /home/ec2-user/database_script.sql
 
               # Run the SQL script on the RDS instance
-              psql -h localhost -U ${var.db_username} -d gatedb -f /home/ec2-user/database_script.sql
+              psql -h localhost -U postgres -d gatedb -f /home/ec2-user/database_script.sql
 
               # (Optional) Run any additional setup steps, like starting Django, etc.
               EOF
