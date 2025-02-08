@@ -25,6 +25,10 @@ resource "aws_instance" "routePlanner" {
 
   user_data = <<-EOF
               #!/bin/bash
+              export DB_NAME="${env.DB_NAME}"
+              export DB_USER="${env.DB_USER}"
+              export DB_PASSWORD="${env.DB_PASSWORD}"
+
               # Update package list and install PostgreSQL client
               sudo yum update -y
               sudo yum install -y postgresql postgresql-server
