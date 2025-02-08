@@ -14,6 +14,10 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          DB_NAME: gatedb
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
 
     steps:
       - name: Checkout repository
@@ -50,34 +54,10 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: terraform
 
-      - name: Install PostgreSQL
-        run: |
-            sudo amazon-linux-extras enable postgresql14
-            sudo yum install -y postgresql postgresql-server
-
-      - name: Get EC2 Public IP
-        id: ec2
-        run: echo "EC2_HOST=$(terraform output -raw public_ip)" >> $GITHUB_ENV
 
       #- name: Copy SQL script to EC2
       #  run: scp -i private_key.pem database_script.sql ec2-user@${{ env.EC2_HOST }}:/home/ec2-user/
       #  working-directory: keys
-
-      - name: Get RDS Endpoint
-        id: get_rds
-        run: echo "RDS_HOST=$(terraform output -raw rds_endpoint)" >> $GITHUB_ENV
-
-      - name: Get RDS Port
-        id: get_rds_port
-        run: echo "RDS_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV
-
-      - name: Run SQL Script on RDS
-        run: |
-          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h ${{ env.RDS_HOST }} -U ${{ secrets.DB_USERNAME }} -d gatedb -p ${{ env.RDS_PORT }} -f sql/create-local-postgres-db.sql
-        env:
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_NAME: ${{ secrets.DB_NAME }}
 
       #- name: Destroy 
        # run: terraform destroy
