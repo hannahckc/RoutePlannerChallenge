@@ -75,7 +75,7 @@ jobs:
       - name: Get EC2 Public IP
         id: ec2
         run: |
-              echo ${{ steps.get_rds_port.RDS_PORT }}
+              echo "Port: ${{ steps.get_rds_port.RDS_PORT }}"
               EC2_HOST=$(terraform output -raw public_ip | sed 's/::debug::Terraform exited with code 0.$//')
               echo "EC2_HOST=$EC2_HOST" >> $GITHUB_ENV
         working-directory: terraform
