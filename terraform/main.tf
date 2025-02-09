@@ -54,8 +54,7 @@ resource "aws_db_instance" "postgresdb" {
   password             = var.db_password
   db_name              = "gatedb"
 
-  # Make instance private (set to false for public access)
-  publicly_accessible    = false
+  publicly_accessible    = true
 
   vpc_security_group_ids = [aws_security_group.django_sg.id]
 
