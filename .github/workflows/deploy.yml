@@ -48,12 +48,12 @@ jobs:
         run: terraform plan
         working-directory: terraform
 
-      #- name: Apply Terraform Configuration
-      #  run: terraform apply -auto-approve
-      #  working-directory: terraform
+      - name: Apply Terraform Configuration
+        run: terraform apply -auto-approve
+        working-directory: terraform
 
-      #- name: Install PostgreSQL on runner
-      #  run: brew install postgresql
+      - name: Install PostgreSQL on runner
+        run: brew install postgresql
 
       - name: Testing outputs
         run: |
