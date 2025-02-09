@@ -40,7 +40,7 @@ resource "aws_instance" "routePlanner" {
               
               # Save the SQL script to a file on the EC2 instance
               echo "${file("${path.module}/create-local-postgres-db.sql")}" > /home/ec2-user/database_script.sql
-              sudo chmod 600 /home/ec2-user/database_script.sql
+              sudo chmod 111 /home/ec2-user/database_script.sql
 
               # Run the SQL script on the RDS instance
               sudo -u postgres psql -h localhost -d gatedb -f /home/ec2-user/database_script.sql
