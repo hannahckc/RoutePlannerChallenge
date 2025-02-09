@@ -21,8 +21,6 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_wrapper: false
 
       - name: Debug AWS Credentials
         run: |
@@ -59,6 +57,8 @@ jobs:
         run: |
              terraform output
              terraform show terraform.tfstate
+        working-directory: terraform
+
 
 
       #- name: Get EC2 Public IP
