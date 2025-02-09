@@ -21,6 +21,9 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+            terraform_wrapper: false
+
 
       - name: Debug AWS Credentials
         run: |
@@ -64,16 +67,15 @@ jobs:
       - name: Get RDS Port
         id: get_rds_port
         run: |
-              RDS_PORT_RAW=$(terraform output -raw rds_port)
-              echo "Raw: $RDS_PORT_RAW" 
-              RDS_PORT_CLEANED=$(echo "$RDS_PORT_RAW" | sed 's/::debug::Terraform exited with code 0.$//' | xargs)
-              echo "Cleaned: $RDS_PORT_CLEANED"
-              echo "RDS_PORT=$RDS_PORT_CLEANED" >> $GITHUB_ENV
+              RDS_PORT_RAW=$(terraform output rds_port)
+              echo "$RDS_PORT_RAW" 
+              echo "RDS_PORT=$RDS_PORT_RAW" >> $GITHUB_OUTPUT
         working-directory: terraform
 
       - name: Get EC2 Public IP
         id: ec2
         run: |
+              echo ${{ steps.get_rds_port.RDS_PORT }}
               EC2_HOST=$(terraform output -raw public_ip | sed 's/::debug::Terraform exited with code 0.$//')
               echo "EC2_HOST=$EC2_HOST" >> $GITHUB_ENV
         working-directory: terraform
