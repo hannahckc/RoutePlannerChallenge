@@ -83,7 +83,7 @@ jobs:
       - name: Get RDS Endpoint
         id: get_rds
         run: |
-              RDS_HOST=$(terraform output rds_endpoint)
+              RDS_HOST=$(terraform output rds_endpoint | sed 's/:5432$//')
               echo "$RDS_HOST" 
               echo "RDS_HOST=$RDS_HOST" >> $GITHUB_ENV
         working-directory: terraform
