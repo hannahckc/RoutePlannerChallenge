@@ -57,8 +57,9 @@ jobs:
 
       - name: Testing outputs
         run: |
-              output=$(terraform output public_ip)
-              echo $output
+             terraform output
+             terraform show terraform.tfstate
+
 
       #- name: Get EC2 Public IP
       #  id: ec2
