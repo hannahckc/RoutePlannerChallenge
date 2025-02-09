@@ -67,28 +67,25 @@ jobs:
       - name: Get RDS Port
         id: get_rds_port
         run: |
-              RDS_PORT_RAW=$(terraform output rds_port)
-              echo "$RDS_PORT_RAW" 
-              echo "RDS_PORT=$RDS_PORT_RAW" >> $GITHUB_ENV
+              RDS_PORT=$(terraform output rds_port)
+              echo "$RDS_PORT" 
+              echo "RDS_PORT=$RDS_PORT" >> $GITHUB_ENV
         working-directory: terraform
 
       - name: Get EC2 Public IP
         id: ec2
         run: |
-              echo "Port: ${{ env.RDS_PORT }}"
-              EC2_HOST=$(terraform output -raw public_ip | sed 's/::debug::Terraform exited with code 0.$//')
-              echo "EC2_HOST=$EC2_HOST" >> $GITHUB_ENV
+              EC2_IP=$(terraform output public_ip)
+              echo "$EC2_IP" 
+              echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
         working-directory: terraform
-
-      - name: Copy SQL script to EC2
-        run: scp -i private_key.pem database_script.sql ec2-user@${{ env.EC2_HOST }}:/home/ec2-user/
-        working-directory: keys
 
       - name: Get RDS Endpoint
         id: get_rds
         run: |
-              RDS_ENDPOINT=$(terraform output -raw rds_endpoint | sed 's/::debug::Terraform exited with code 0.$//')
-              echo "RDS_ENDPOINT=$RDS_ENDPOINT" >> $GITHUB_ENV
+              RDS_HOST=$(terraform output rds_endpoint)
+              echo "$RDS_HOST" 
+              echo "RDS_HOST=$RDS_HOST" >> $GITHUB_ENV
         working-directory: terraform
 
       - name: Run SQL Script on RDS
