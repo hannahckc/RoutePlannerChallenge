@@ -29,6 +29,18 @@ resource "aws_instance" "routePlanner" {
   }
 
   security_groups = [aws_security_group.django_sg.name]
+
+   # User data script to install PostgreSQL
+  user_data = <<-EOT
+              #!/bin/bash
+              sudo yum update -y
+              sudo amazon-linux-extras enable postgresql13
+              sudo yum install -y postgresql-server postgresql-contrib
+              sudo postgresql-setup initdb
+              sudo systemctl enable postgresql
+              sudo systemctl start postgresql
+              sudo systemctl status postgresql
+              EOT
   
 }
 
