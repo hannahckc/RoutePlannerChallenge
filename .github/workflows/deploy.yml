@@ -56,6 +56,9 @@ jobs:
       - name: Testing outputs
         run: |
              terraform output
+             terraform output -raw public_ip
+             terraform output -raw rds_endpoint
+             terraform output -raw rds_port
         working-directory: terraform
 
       - name: Get EC2 Public IP
