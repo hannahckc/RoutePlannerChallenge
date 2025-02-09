@@ -34,7 +34,7 @@ resource "aws_instance" "routePlanner" {
   user_data = <<-EOT
               #!/bin/bash
               sudo yum update -y
-              sudo amazon-linux-extras enable postgresql13
+              sudo amazon-linux-extras enable postgresql
               sudo yum install -y postgresql-server postgresql-contrib
               sudo postgresql-setup initdb
               sudo systemctl enable postgresql
