@@ -50,12 +50,12 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: terraform
 
-      - name: Install PostgreSQL on runner
-        run: brew install postgresql
+      #- name: Install PostgreSQL on runner
+      #  run: brew install postgresql
 
-      #- name: Get EC2 Public IP
-      #  id: ec2
-      #  run: echo "EC2_HOST=$(terraform output -raw public_ip)" >> $GITHUB_ENV
+      - name: Get EC2 Public IP
+        id: ec2
+        run: echo "EC2_HOST=$(terraform output -raw public_ip)" >> $GITHUB_ENV
 
       #- name: Copy SQL script to EC2
       #  run: scp -i private_key.pem database_script.sql ec2-user@${{ env.EC2_HOST }}:/home/ec2-user/
