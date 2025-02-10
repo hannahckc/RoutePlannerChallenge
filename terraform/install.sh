@@ -5,7 +5,7 @@ exec > /var/log/user-data.log 2>&1
 
 # Install and start up postgres on ec2 instance
 sudo yum update -y
-sudo amazon-linux-extras enable postgresql
+sudo amazon-linux-extras enable postgresql14
 sudo yum install -y postgresql-server postgresql-contrib
 sudo postgresql-setup initdb
 sudo systemctl enable postgresql
@@ -25,8 +25,8 @@ source venv/bin/activate
 
 # Install dependencies
 pip install --upgrade pip
-pip install django
+pip install django psycopg2-binary
 pip install -r requirements.txt
 
 python manage.py migrate
-nohup python manage.py runserver 0.0.0.0:8000 &
+python3 manage.py runserver 0.0.0.0:8000
