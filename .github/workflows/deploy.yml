@@ -35,7 +35,7 @@ jobs:
         run: |
           echo "db_username = \"${{ secrets.DB_USERNAME }}\"" >> terraform.tfvars
           echo "db_password = \"${{ secrets.DB_PASSWORD }}\"" >> terraform.tfvars
-          echo "private_key_value" = \"${{ secrets.AWS_SSH_KEY }}\"" >> terraform.tfvars
+          echo "private_key_value = \"${{ secrets.AWS_SSH_KEY }}\"" >> terraform.tfvars
         working-directory: terraform
 
       - name: Initialize Terraform
