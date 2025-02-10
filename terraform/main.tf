@@ -28,19 +28,25 @@ resource "aws_instance" "routePlanner" {
     Name = "myRoutePlanner"
   }
 
+  # Copy the Django app directory from repo to EC2
+  provisioner "file" {
+    source      = "../djangoApp"  # Local path to Django project
+    destination = "/home/ec2-user/djangoApp"  # Amazon Linux 2 default user
+  }
+
+   # SSH Connection for provisioner
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"  # Default Amazon Linux 2 user
+    private_key = file("../key/routePlannerTest.pem")  # Path to your private key
+    host        = self.public_ip  # Connect using the instance's public IP
+  }
+
   security_groups = [aws_security_group.django_sg.name]
 
    # User data script to install PostgreSQL
-  user_data = <<-EOT
-              #!/bin/bash
-              sudo yum update -y
-              sudo amazon-linux-extras enable postgresql
-              sudo yum install -y postgresql-server postgresql-contrib
-              sudo postgresql-setup initdb
-              sudo systemctl enable postgresql
-              sudo systemctl start postgresql
-              sudo systemctl status postgresql
-              EOT
+  user_data = file("install.sh")
+              
   
 }
 
