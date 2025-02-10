@@ -34,11 +34,11 @@ resource "aws_instance" "routePlanner" {
     destination = "/home/ec2-user/djangoApp"  # Amazon Linux 2 default user
   }
 
-   # SSH Connection for provisioner
+  # SSH Connection for provisioner
   connection {
     type        = "ssh"
     user        = "ec2-user"  # Default Amazon Linux 2 user
-    private_key = file("../keys/routePlannerTest.pem")  # Path to your private key
+    private_key = file("keys/routePlannerTest.pem")  # Path to your private key
     host        = self.public_ip  # Connect using the instance's public IP
   }
 
