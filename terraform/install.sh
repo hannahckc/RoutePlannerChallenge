@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set +e
 exec > /var/log/user-data.log 2>&1
 
 # Install and start up postgres on ec2 instance
@@ -25,7 +25,6 @@ source venv/bin/activate
 
 # Install dependencies
 pip install --upgrade pip
-pip install django psycopg2-binary
 pip install -r requirements.txt
 
 python manage.py migrate
