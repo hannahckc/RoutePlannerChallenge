@@ -17,7 +17,7 @@ sudo yum update -y
 sudo yum install -y python3 python3-pip python3-virtualenv git
 
 # Move into Django app directory
-cd /home/ec2-user/djangoApp
+cd /home/ec2-user/djangoApp/routePlannerDjango
 
 # Set up virtual environment
 python3 -m venv venv
