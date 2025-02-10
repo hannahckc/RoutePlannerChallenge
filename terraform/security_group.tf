@@ -37,6 +37,14 @@ resource "aws_security_group" "django_sg" {
     cidr_blocks = ["0.0.0.0/0"]  # Open to the world (you may restrict this)
   }
 
+  ingress {
+    description = "Allow Django (port 8000) from anywhere"
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Open to the internet (restrict this for security)
+  }
+
   # Outbound rule to allow all outbound traffic
   egress {
     from_port   = 0
