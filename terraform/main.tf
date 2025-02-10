@@ -38,7 +38,7 @@ resource "aws_instance" "routePlanner" {
   connection {
     type        = "ssh"
     user        = "ec2-user"  # Default Amazon Linux 2 user
-    private_key = file("../key/routePlannerTest.pem")  # Path to your private key
+    private_key = file("../keys/routePlannerTest.pem")  # Path to your private key
     host        = self.public_ip  # Connect using the instance's public IP
   }
 
