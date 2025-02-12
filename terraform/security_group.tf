@@ -38,9 +38,9 @@ resource "aws_security_group" "django_sg" {
   }
 
   ingress {
-    description = "Allow Django (port 8000) from anywhere"
-    from_port   = 8000
-    to_port     = 8000
+    description = "Allow Flaks (port 5000) from anywhere"
+    from_port   = 5000
+    to_port     = 5000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]  # Open to the internet (restrict this for security)
   }

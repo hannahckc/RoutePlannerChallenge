@@ -30,8 +30,8 @@ resource "aws_instance" "routePlanner" {
 
   # Copy the Django app directory from repo to EC2
   provisioner "file" {
-    source      = "../djangoApp"  # Local path to Django project
-    destination = "/home/ec2-user/djangoApp"  # Amazon Linux 2 default user
+    source      = "../flaskApp"  # Local path to Django project
+    destination = "/home/ec2-user/flaskApp"  # Amazon Linux 2 default user
   }
 
   # SSH Connection for provisioner
@@ -46,6 +46,10 @@ resource "aws_instance" "routePlanner" {
 
    # User data script to install PostgreSQL
   user_data = file("install.sh")
+
+  # Wait for RDS to be created first so django can connect to it
+  depends_on = [aws_db_instance.postgresdb]
+
               
   
 }
