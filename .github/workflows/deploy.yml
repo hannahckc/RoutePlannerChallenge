@@ -39,8 +39,8 @@ jobs:
       run: terraform apply -auto-approve 
       working-directory: terraform
 
-     - name: Set up environment variables
-       run: |
+    - name: Set up environment variables
+      run: |
         echo "DB_HOST=$(terraform output -raw rds_host)" >> $GITHUB_ENV
         echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV
         echo "DB_USERNAME=dbadmin" >> $GITHUB_ENV
