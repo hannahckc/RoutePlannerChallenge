@@ -1,19 +1,64 @@
+DROP TABLE gate;
+DROP TABLE gate_connections;
+
 CREATE TABLE gate (
     id VARCHAR(3) PRIMARY KEY,
-    name VARCHAR(20),
-    connections JSON
+    name VARCHAR(20)
 );
-INSERT INTO gate (id, name, connections) VALUES
-    ('SOL', 'Sol', '[{ "id": "RAN", "hu": "100" }, { "id": "PRX", "hu": "90" }, { "id": "SIR", "hu": "100" }, { "id": "ARC", "hu": "200" }, { "id": "ALD", "hu": "250" }]'),
-    ('PRX', 'Proxima', '[{ "id": "SOL", "hu": "90" }, { "id": "SIR", "hu": "100" }, { "id": "ALT", "hu": "150" }]'),
-    ('SIR', 'Sirius', '[{ "id": "SOL", "hu": "80" }, { "id": "PRX", "hu": "10" }, { "id": "CAS", "hu": "200" }]'),
-    ('CAS', 'Castor', '[{ "id": "SIR", "hu": "200" }, { "id": "PRO", "hu": "120" }]'),
-    ('PRO', 'Procyon', '[{ "id": "CAS", "hu": "80" }]'),
-    ('DEN', 'Denebula', '[{ "id": "PRO", "hu": "5" }, { "id": "ARC", "hu": "2" }, { "id": "FOM", "hu": "8" }, { "id": "RAN", "hu": "100" }, { "id": "ALD", "hu": "3" }]'),
-    ('RAN', 'Ran', '[{ "id": "SOL", "hu": "100" }]'),
-    ('ARC', 'Arcturus', '[{ "id": "SOL", "hu": "500" }, { "id": "DEN", "hu": "120" }]'),
-    ('FOM', 'Fomalhaut', '[{ "id": "PRX", "hu": "10" }, { "id": "DEN", "hu": "20" }, { "id": "ALS", "hu": "9" }]'),
-    ('ALT', 'Altair', '[{ "id": "FOM", "hu": "140" }, { "id": "VEG", "hu": "220" }]'),
-    ('VEG', 'Vega', '[{ "id": "ARC", "hu": "220" }, { "id": "ALD", "hu": "580" }]'),
-    ('ALD', 'Aldermain', '[{ "id": "SOL", "hu": "200" }, { "id": "ALS", "hu": "160" }, { "id": "VEG", "hu": "320" }]'),
-    ('ALS', 'Alshain', '[{ "id": "ALT", "hu": "1" }, { "id": "ALD", "hu": "1" }]');
+INSERT INTO gate (id, name) VALUES
+    ('SOL', 'Sol'),
+    ('PRX', 'Proxima'),
+    ('SIR', 'Sirius'),
+    ('CAS', 'Castor'),
+    ('PRO', 'Procyon'),
+    ('DEN', 'Denebula'),
+    ('RAN', 'Ran'),
+    ('ARC', 'Arcturus'),
+    ('FOM', 'Fomalhaut'),
+    ('ALT', 'Altair'),
+    ('VEG', 'Vega'),
+    ('ALD', 'Aldermain'),
+    ('ALS', 'Alshain');
+
+CREATE TABLE gate_connections (
+    id SERIAL PRIMARY KEY,
+    gate_start_id VARCHAR(3),
+    gate_end_id VARCHAR(3),
+    distance INTEGER
+);
+
+INSERT INTO gate_connections (gate_start_id, gate_end_id, distance) VALUES
+    ('SOL', 'RAN', 100),
+    ('SOL', 'PRX', 90),
+    ('SOL', 'SIR', 100),
+    ('SOL', 'ARC', 200),
+    ('SOL', 'ALD', 250),
+    ('PRX', 'SOL', 90),
+    ('PRX', 'SIR', 100),
+    ('PRX', 'ALT', 150),
+    ('SIR', 'SOL', 80),
+    ('SIR', 'PRX', 10),
+    ('SIR', 'CAS', 200),
+    ('CAS', 'SIR', 200),
+    ('CAS', 'PRO', 120),
+    ('PRO', 'CAS', 80),
+    ('DEN', 'PRO', 5),
+    ('DEN', 'ARC', 2),
+    ('DEN', 'FOM', 8),
+    ('DEN', 'RAN', 100),
+    ('DEN', 'ALD', 3),
+    ('RAN', 'SOL', 100),
+    ('ARC', 'SOL', 500),
+    ('ARC', 'DEN', 120),
+    ('FOM', 'PRX', 10),
+    ('FOM', 'DEN', 20),
+    ('FOM', 'ALS', 9),
+    ('ALT', 'FOM', 140),
+    ('ALT', 'VEG', 220),
+    ('VEG', 'ARC', 220),
+    ('VEG', 'ALD', 580),
+    ('ALD', 'SOL', 200),
+    ('ALD', 'ALS', 160),
+    ('ALD', 'VEG', 320),
+    ('ALS', 'ATL', 1),
+    ('ALS', 'ALD', 1);
