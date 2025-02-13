@@ -56,11 +56,15 @@ jobs:
       run: |
         echo "DB_HOST=$(terraform output -raw rds_host)" >> $GITHUB_ENV
         echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV
+      working-directory: terraform
+
 
     - name: Run SQL script on RDS
       run: |
         PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d mydb -f create-local-postgres-db.sql
         working-directory: sql
+      working-directory: terraform
+
 
     - name: Make deploy.sh executable
       run: chmod +x scripts/deploy.sh
