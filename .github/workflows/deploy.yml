@@ -97,6 +97,7 @@ jobs:
               ECR_REPO=$(terraform output ecr_repo_url)
               echo "$ECR_REPO" 
               echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
+        working-directory: terraform
 
       - name: Run SQL Script on RDS
         run: |
