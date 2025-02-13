@@ -14,7 +14,14 @@ jobs:
       uses: actions/checkout@v2
     
     - name: Set up Homebrew
-      uses: shivammathur/setup-homebrew@v2
+      run: |
+        if ! command -v brew &> /dev/null; then
+          echo "Homebrew not found, installing..."
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" < /dev/null
+          echo "export PATH=/opt/homebrew/bin:$PATH" >> $GITHUB_ENV  # Ensure Homebrew is in PATH
+        else
+          echo "Homebrew already installed"
+        fi
 
     - name: Install PostgreSQL client using Homebrew
       run: |
