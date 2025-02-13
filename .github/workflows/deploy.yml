@@ -27,6 +27,11 @@ jobs:
       run: |
         brew install postgresql
 
+    - name: Set up environment variables
+      run: |
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+        echo "DB_USERNAME=master" >> $GITHUB_ENV
+
     - name: Initialise terraform
       run: terraform init
       working-directory: terraform
@@ -43,8 +48,6 @@ jobs:
       run: |
         echo "DB_HOST=$(terraform output -raw rds_host)" >> $GITHUB_ENV
         echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV
-        echo "DB_USERNAME=dbadmin" >> $GITHUB_ENV
-        echo "DB_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> $GITHUB_ENV
 
     - name: Run SQL script on RDS
       run: |
