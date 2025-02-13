@@ -111,18 +111,20 @@ jobs:
       - name: Authenticate to ECR
         run: |
           aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin $ECR_REPO
-       
+        working-directory: flaskApp
+
       - name: Build Docker Image
         run: docker build -t my-flask-app .
+        working-directory: flaskApp
+
 
       - name: Tag Docker Image
         run: docker tag my-flask-app:latest $ECR_REPO:latest
+        working-directory: flaskApp
 
       - name: Push Docker Image to ECR
         run: docker push $ECR_REPO:latest
-
-      - name: Extract EC2 Public IP
-        run: echo "EC2_IP=$(terraform output -raw ec2_public_ip)" >> $GITHUB_ENV
+        working-directory: flaskApp
 
       - name: SSH and Run Docker on EC2
         run: |
@@ -132,6 +134,7 @@ jobs:
             docker pull $ECR_REPO:latest
             docker run -d -p 8080:8080 --name my-flask-app $ECR_REPO:latest
           EOF
+        working-directory: flaskApp
 
 
       #- name: Destroy 
