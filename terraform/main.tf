@@ -1,77 +1,29 @@
-data "aws_ami" "latest_arm_ami" {
-  most_recent = true
-  owners      = ["amazon"]
 
-  filter {
-    name   = "architecture"
-    values = ["arm64"]
-  }
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-arm64-gp2"]  # Amazon Linux 2
-  }
+module "ecs" {
+  source             = "./ecs"
+  project_name       = var.project_name
+  public_subnets     = var.public_subnets
+  vpc_id             = var.vpc_id
+  region             = var.region
+  container_image    = var.container_image
+  env                = terraform.workspace
+  db_password        = var.db_password
+  db_host            = module.database.db_host
 }
 
-# Provider Configuration
-provider "aws" {
+module "database" {
+  source = "./rds"
 
-}
-
-resource "aws_instance" "routePlanner" {
-  ami           = data.aws_ami.latest_arm_ami.id
-  instance_type = "t4g.micro"  # ARM64-compatible instance
-  key_name      = var.private_key_name
-
-  tags = {
-    # Name that will appear on AWS console
-    Name = "myRoutePlanner"
+  env                  = terraform.workspace
+  allocated_storage    = 30
+  instance_class       = terraform.workspace == "production" ? "db.t3.small" : "db.t3.micro"
+  retention_days       = terraform.workspace == "production" ? 7 : 3
+  engine_version       = 16.3
+  app_name             = var.project_name
+  db_subnet_group_name = var.db_subnet_group_name
+  vpc_id               = var.vpc_id
+  db_password          = var.db_password
+  ingress_access = {
+    gatus = { name : "gatus uptime monitor", sg_id : module.ecs.security_group_id }
   }
-
-  # Copy the Flask app directory from repo to EC2
-  provisioner "file" {
-    source      = "../flaskApp"  # Local path to Django project
-    destination = "/home/ec2-user/flaskApp"  # Amazon Linux 2 default user
-  }
-
-  # SSH Connection for provisioner
-  connection {
-    type        = "ssh"
-    user        = "ec2-user"  # Default Amazon Linux 2 user
-    private_key = var.private_key_value  # Path to your private key
-    host        = self.public_ip  # Connect using the instance's public IP
-  }
-
-  security_groups = [aws_security_group.django_sg.name]
-
-   # User data script to install PostgreSQL
-  user_data = file("install.sh")
-
-  # Wait for RDS to be created first so Flask can connect to it
-  depends_on = [aws_db_instance.postgresdb]
-
-              
-  
-}
-
-resource "aws_db_instance" "postgresdb" {
-  allocated_storage    = 20            # Storage in GB
-  instance_class       = "db.t4g.micro"  # Database instance type
-  engine               = "postgres"     # PostgreSQL engine
-  engine_version       = "17.2"         # PostgreSQL version
-  identifier           = "my-postgresdb-instance"  # This is your DB instance name
-  username             = var.db_username
-  password             = var.db_password
-  db_name              = "gatedb"
-
-  publicly_accessible    = true
-
-  vpc_security_group_ids = [aws_security_group.django_sg.id]
-
-  skip_final_snapshot = true
-
-}
-
-resource "aws_ecr_repository" "flask_app" {
-  name = "my-flask-app"
 }
