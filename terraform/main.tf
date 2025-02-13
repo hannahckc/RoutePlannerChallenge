@@ -75,7 +75,3 @@ resource "aws_db_instance" "postgresdb" {
 resource "aws_ecr_repository" "flask_app" {
   name = "my-flask-app"
 }
-
-output "ecr_repo_url" {
-  value = aws_ecr_repository.flask_app.repository_url
-}
