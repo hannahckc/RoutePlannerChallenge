@@ -35,8 +35,7 @@ jobs:
     - name: Initialise terraform
       run: terraform init
       working-directory: terraform
-      with:
-        wrapper: false
+
 
     - name: Validate terraform
       run: terraform validate
