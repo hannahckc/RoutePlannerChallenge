@@ -3,7 +3,7 @@ name: Deploy ECS and RDS instances
 on:
   push:
     branches:
-      - main
+      - createApp
 
 jobs:
   deploy:
