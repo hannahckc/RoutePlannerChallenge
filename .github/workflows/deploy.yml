@@ -93,7 +93,8 @@ jobs:
 
       - name: Extract ECR Repo URL
         run: |
-              ECR_REPO=$(terraform output ecr_repo_url)
+              ECR_REPO=$(terraform output -raw ecr_repo_url)
+              ECR_REPO=$(echo $ECR_REPO | sed 's/\\"//g')  # Remove any escaped quotes
               echo "$ECR_REPO" 
               echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
         working-directory: terraform
