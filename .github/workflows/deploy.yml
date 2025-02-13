@@ -13,8 +13,14 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
     
-    - name: Set up PostgreSQL client
-      run: sudo apt-get install postgresql-client
+    - name: Install Homebrew (if not already installed)
+      run: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        echo "export PATH=/opt/homebrew/bin:$PATH" >> $GITHUB_ENV  # Ensure Homebrew is in PATH
+
+    - name: Install PostgreSQL client using Homebrew
+      run: |
+        brew install postgresql
     
     - name: Set up environment variables
       run: |
