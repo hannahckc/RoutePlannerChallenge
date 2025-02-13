@@ -30,7 +30,7 @@ jobs:
     - name: Set up environment variables
       run: |
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-        echo "DB_USERNAME=master" >> $GITHUB_ENV
+        echo "DB_USERNAME=${{ secrets.DB_USER }}" >> $GITHUB_ENV
 
     - name: Initialise terraform
       run: terraform init

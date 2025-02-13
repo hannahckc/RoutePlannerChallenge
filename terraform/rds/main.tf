@@ -3,7 +3,7 @@ resource "aws_db_instance" "application_database" {
   allocated_storage = var.allocated_storage
   instance_class    = var.instance_class
 
-  username = "master"
+  username = var.db_username
   password = var.db_password
   db_name  = "gatus"
 

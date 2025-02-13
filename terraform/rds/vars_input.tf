@@ -12,3 +12,7 @@ variable "ingress_access" {
 variable "db_password" {
   type = string
 }
+
+variable "db_username" {
+  type = string
+}
