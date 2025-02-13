@@ -12,6 +12,14 @@ resource "aws_security_group" "django_sg" {
     cidr_blocks = ["0.0.0.0/0"]  # Allow access from anywhere
   }
 
+ # Allow access to docker image
+   ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow access from anywhere
+  }
+
   # Inbound rule to allow HTTPS traffic (port 443)
   ingress {
     from_port   = 443

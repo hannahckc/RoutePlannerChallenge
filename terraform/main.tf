@@ -28,7 +28,7 @@ resource "aws_instance" "routePlanner" {
     Name = "myRoutePlanner"
   }
 
-  # Copy the Django app directory from repo to EC2
+  # Copy the Flask app directory from repo to EC2
   provisioner "file" {
     source      = "../flaskApp"  # Local path to Django project
     destination = "/home/ec2-user/flaskApp"  # Amazon Linux 2 default user
@@ -47,7 +47,7 @@ resource "aws_instance" "routePlanner" {
    # User data script to install PostgreSQL
   user_data = file("install.sh")
 
-  # Wait for RDS to be created first so django can connect to it
+  # Wait for RDS to be created first so Flask can connect to it
   depends_on = [aws_db_instance.postgresdb]
 
               
@@ -70,4 +70,12 @@ resource "aws_db_instance" "postgresdb" {
 
   skip_final_snapshot = true
 
+}
+
+resource "aws_ecr_repository" "flask_app" {
+  name = "my-flask-app"
+}
+
+output "ecr_repo_url" {
+  value = aws_ecr_repository.flask_app.repository_url
 }
