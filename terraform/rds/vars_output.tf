@@ -3,8 +3,8 @@ output "security_group_id" {
   value       = aws_security_group.db_security_group.id
 }
 
-# Output the RDS instance endpoint (address)
-output "rds_endpoint" {
+# Output the RDS instance host
+output "rds_host" {
   value = aws_db_instance.application_database.address
 }
 

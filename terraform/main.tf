@@ -8,7 +8,7 @@ module "ecs" {
   container_image    = var.container_image
   env                = terraform.workspace
   db_password        = var.db_password
-  db_host            = module.database.db_host
+  db_host            = module.database.rds_host
 }
 
 module "database" {
@@ -26,4 +26,10 @@ module "database" {
   ingress_access = {
     gatus = { name : "gatus uptime monitor", sg_id : module.ecs.security_group_id }
   }
+}
+
+module "ecr" {
+  source = "./ecr"
+  repository_name = var.repository_name    
+  region          = var.region      
 }

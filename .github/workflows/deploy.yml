@@ -1,142 +1,41 @@
-name: Deploy Terraform
+name: Deploy ECS and RDS instances
 
 on:
   push:
     branches:
-      - createApp
+      - main
 
 jobs:
-  terraform:
-    name: Apply Terraform Configuration
+  run_sql_script:
     runs-on: self-hosted
-
-    env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-north-1
-
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Check out repository
+      uses: actions/checkout@v2
+    
+    - name: Set up PostgreSQL client
+      run: sudo apt-get install postgresql-client
+    
+    - name: Set up environment variables
+      run: |
+        echo "DB_HOST=$(terraform output -raw rds_host)" >> $GITHUB_ENV
+        echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV
+        echo "DB_USERNAME=dbadmin" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> $GITHUB_ENV
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-            terraform_wrapper: false
+    - name: Initialise terraform
+      run: terraform init
+      working-directory: terraform
 
+    - name: Validate terraform
+      run: terraform validate
+      working-directory: terraform
 
-      - name: Debug AWS Credentials
+    - name: Apply terraform
+      run: terraform apply -auto-approve 
+      working-directory: terraform
+
+     - name: Run SQL script on RDS
         run: |
-          echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
-          echo "AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-
-      - name: Generate terraform.tfvars file
-        run: |
-          echo "db_username = \"${{ secrets.DB_USERNAME }}\"" >> terraform.tfvars
-          echo "db_password = \"${{ secrets.DB_PASSWORD }}\"" >> terraform.tfvars
-          printf 'private_key_value = <<EOF\n%s\nEOF\n' "${{ secrets.AWS_SSH_KEY }}" >> terraform.tfvars
-        
-          echo "DB_USERNAME=${{ secrets.DB_USER }}" >> $GITHUB_ENV
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
-        
-        working-directory: terraform
-
-      - name: Initialize Terraform
-        run: terraform init
-        working-directory: terraform
-
-      - name: Validate Terraform
-        run: terraform validate
-        working-directory: terraform
-
-      - name: Plan Terraform
-        run: terraform plan
-        working-directory: terraform
-
-      - name: Apply Terraform Configuration
-        run: terraform apply -auto-approve
-        working-directory: terraform
-
-      - name: Testing outputs
-        run: |
-             terraform output
-             terraform output -raw public_ip
-             terraform output -raw rds_endpoint
-             terraform output -raw rds_port
-             terraform output -raw ecr_repo_url
-        working-directory: terraform
-
-      - name: Get RDS Port
-        id: get_rds_port
-        run: |
-              RDS_PORT=$(terraform output rds_port)
-              echo "$RDS_PORT" 
-              echo "RDS_PORT=$RDS_PORT" >> $GITHUB_ENV
-        working-directory: terraform
-
-      - name: Get EC2 Public IP
-        id: ec2
-        run: |
-              EC2_IP=$(terraform output public_ip)
-              echo "$EC2_IP" 
-              echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
-        working-directory: terraform
-
-      - name: Get RDS Endpoint
-        id: get_rds
-        run: |
-              RDS_HOST=$(terraform output rds_endpoint | cut -d':' -f1)
-              echo "$RDS_HOST" 
-              echo "RDS_HOST=$RDS_HOST\"" >> $GITHUB_ENV
-        working-directory: terraform
-
-      - name: Extract ECR Repo URL
-        run: |
-              ECR_REPO=$(terraform output -raw ecr_repo_url)
-              ECR_REPO=$(echo $ECR_REPO | sed 's/\\"//g')  # Remove any escaped quotes
-              echo "$ECR_REPO" 
-              echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
-        working-directory: terraform
-
-      - name: Run SQL Script on RDS
-        run: |
-          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h ${{ env.RDS_HOST }} -U ${{ secrets.DB_USERNAME }} -d gatedb -p ${{ env.RDS_PORT }} -f create-local-postgres-db.sql
-        env:
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_NAME: ${{ secrets.DB_NAME }}
+        PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d mydb -f create-local-postgres-db.sql
         working-directory: sql
-
-      - name: Authenticate to ECR
-        run: |
-          aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin $ECR_REPO
-        working-directory: flaskApp
-
-      - name: Build Docker Image
-        run: docker build -t my-flask-app .
-        working-directory: flaskApp
-
-
-      - name: Tag Docker Image
-        run: docker tag my-flask-app:latest $ECR_REPO:latest
-        working-directory: flaskApp
-
-      - name: Push Docker Image to ECR
-        run: docker push $ECR_REPO:latest
-        working-directory: flaskApp
-
-      - name: SSH and Run Docker on EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.AWS_SSH_KEY }} ec2-user@$EC2_IP <<EOF
-            docker stop my-flask-app || true
-            docker rm my-flask-app || true
-            docker pull $ECR_REPO:latest
-            docker run -d -p 8080:8080 --name my-flask-app $ECR_REPO:latest
-          EOF
-        working-directory: flaskApp
-
-
-      #- name: Destroy 
-       # run: terraform destroy
-       # working-directory: terraform
