@@ -41,8 +41,12 @@ jobs:
       working-directory: terraform
 
     - name: Apply terraform
-      run: terraform apply -auto-approve 
+      run: |
+        terraform apply -auto-approve \
+        -var "db_username=$DB_USERNAME" \
+        -var "db_password=$DB_PASSWORD"
       working-directory: terraform
+
 
     - name: Set up environment variables
       run: |
