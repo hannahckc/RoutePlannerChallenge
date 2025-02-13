@@ -15,3 +15,5 @@ container_image = "825765395037.dkr.ecr.eu-north-1.amazonaws.com/my-flask-app:la
 domain_name = "www.hcrouteplanner.com"
 
 hosted_zone_id = "Z0772735JSMJ7V9NGTMV"
+
+repository_name = "my-flask-app-repo"

@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.env/
+.pytest_cache/
+
+# Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+
+# SSH keys (eg .pem files)
+keys/*
+
+flaskApp/myenv

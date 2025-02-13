@@ -3,7 +3,12 @@ output "security_group_id" {
   value       = aws_security_group.db_security_group.id
 }
 
-output "db_host" {
-  description = "Hostname of the database"
+# Output the RDS instance endpoint (address)
+output "rds_endpoint" {
   value = aws_db_instance.application_database.address
+}
+
+# Output the DB instance port
+output "rds_port" {
+  value = aws_db_instance.application_database.port
 }

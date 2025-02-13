@@ -1,0 +1,41 @@
+name: Deploy ECS and RDS instances
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run_sql_script:
+    runs-on: self-hosted
+    
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    
+    - name: Set up PostgreSQL client
+      run: sudo apt-get install postgresql-client
+    
+    - name: Set up environment variables
+      run: |
+        echo "DB_HOST=$(terraform output -raw rds_endpoint)" >> $GITHUB_ENV
+        echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV
+        echo "DB_USERNAME=dbadmin" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> $GITHUB_ENV
+
+    - name: Initialise terraform
+      run: terraform init
+      working-directory: terraform
+
+    - name: Validate terraform
+      run: terraform validate
+      working-directory: terraform
+
+    - name: Apply terraform
+      run: terraform apply -auto-approve 
+      working-directory: terraform
+
+     - name: Run SQL script on RDS
+        run: |
+        PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d mydb -f create-local-postgres-db.sql
+        working-directory: sql

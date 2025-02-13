@@ -12,7 +12,7 @@ variable "db_subnet_group_name" {
 }
 
 variable "region" {
-  default = "eu-west-1"
+  default = "eu-north-1"
 }
 
 variable "vpc_id" {
@@ -42,5 +42,9 @@ variable "domain_name" {
 }
 
 variable "hosted_zone_id" {
+  type = string
+}
+
+variable "repository_name" {
   type = string
 }
