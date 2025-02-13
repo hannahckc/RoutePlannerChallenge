@@ -62,7 +62,7 @@ jobs:
 
     - name: Run SQL script on RDS
       run: |
-        PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d gatus -f create-local-postgres-db.sql
+        PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d gatedb -f create-local-postgres-db.sql
         working-directory: sql
       working-directory: terraform
 

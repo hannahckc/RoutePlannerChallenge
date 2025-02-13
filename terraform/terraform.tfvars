@@ -17,3 +17,5 @@ domain_name = "www.hcrouteplanner.com"
 hosted_zone_id = "Z0772735JSMJ7V9NGTMV"
 
 repository_name = "my-flask-app-repo"
+
+db_name = "gatedb"
