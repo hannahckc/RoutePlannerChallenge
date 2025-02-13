@@ -57,3 +57,12 @@ jobs:
       run: |
         PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d mydb -f create-local-postgres-db.sql
         working-directory: sql
+
+    - name: Make deploy.sh executable
+      run: chmod +x scripts/deploy.sh
+      working-directory: ${{ github.workspace }}
+
+    - name: Run deploy docker script
+      run: ./scripts/deploy.sh
+      working-directory: ${{ github.workspace }}
+      shell: bash
