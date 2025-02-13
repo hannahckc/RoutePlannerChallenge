@@ -52,3 +52,7 @@ variable "hosted_zone_id" {
 variable "repository_name" {
   type = string
 }
+
+variable "db_name" {
+  type = string
+}

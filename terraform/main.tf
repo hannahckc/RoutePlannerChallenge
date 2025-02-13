@@ -22,7 +22,7 @@ module "database" {
   app_name             = var.project_name
   db_subnet_group_name = var.db_subnet_group_name
   vpc_id               = var.vpc_id
-  db_username             = var.db_username
+  db_username          = var.db_username
   db_password          = var.db_password
   ingress_access = {
     gatus = { name : "gatus uptime monitor", sg_id : module.ecs.security_group_id }

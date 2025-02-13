@@ -5,7 +5,7 @@ resource "aws_db_instance" "application_database" {
 
   username = var.db_username
   password = var.db_password
-  db_name  = var.db_name
+  db_name  = "gatedb"
 
 
   auto_minor_version_upgrade      = true
