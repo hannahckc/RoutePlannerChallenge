@@ -35,7 +35,7 @@ jobs:
       run: terraform apply -auto-approve 
       working-directory: terraform
 
-     - name: Run SQL script on RDS
-        run: |
+    - name: Run SQL script on RDS
+      run: |
         PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d mydb -f create-local-postgres-db.sql
         working-directory: sql
