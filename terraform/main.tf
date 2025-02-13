@@ -34,3 +34,23 @@ module "ecr" {
   repository_name = var.repository_name    
   region          = var.region      
 }
+
+output "repository_url" {
+  value = module.ecr.repository_url
+}
+
+output "security_group_id_ecs" {
+  value = module.ecs.security_group_id
+}
+
+output "security_group_id_rds" {
+  value = module.database.security_group_id
+}
+
+output "rds_host" {
+  value = module.database.rds_host
+}
+
+output "rds_port" {
+  value = module.database.rds_port
+}

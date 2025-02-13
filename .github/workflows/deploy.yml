@@ -47,6 +47,10 @@ jobs:
         -var "db_password=$DB_PASSWORD"
       working-directory: terraform
 
+    - name: Check outputs
+      uses: terraform output
+      working-directory: terraform
+
 
     - name: Set up environment variables
       run: |
