@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  run_sql_script:
+  deploy:
     runs-on: self-hosted
     
     steps:
