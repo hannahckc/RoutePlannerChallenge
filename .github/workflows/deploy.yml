@@ -48,7 +48,7 @@ jobs:
       working-directory: terraform
 
     - name: Check outputs
-      uses: terraform output
+      run: terraform output
       working-directory: terraform
 
 
