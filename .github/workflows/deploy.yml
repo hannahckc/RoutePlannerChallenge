@@ -29,14 +29,12 @@ jobs:
 
     - name: Install AWS Session Manager Plugin (macOS)
       run: |
-        curl -L "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/mac/sessionmanager-bundle.zip" -o "sessionmanager-bundle.zip"
+        curl -L "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
         unzip sessionmanager-bundle.zip
         sudo mkdir -p /usr/local/sessionmanagerplugin
         sudo mv sessionmanager-bundle /usr/local/sessionmanagerplugin
         cd /usr/local/sessionmanagerplugin/sessionmanager-bundle
         sudo ./install
-
-
 
     - name: Set up environment variables
       run: |
