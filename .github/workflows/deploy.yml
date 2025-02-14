@@ -73,6 +73,6 @@ jobs:
       working-directory: ${{ github.workspace }}
 
     - name: Run deploy docker script
-      run: ./scripts/deploy.sh
+      run: ./scripts/deploy.sh v1.0
       working-directory: ${{ github.workspace }}
       shell: bash
