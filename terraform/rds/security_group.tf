@@ -24,5 +24,6 @@ resource "aws_security_group_rule" "security_group_rule" {
   protocol  = "tcp"
   description = "Allow traffic from anywhere to database"
   cidr_blocks = ["0.0.0.0/0"]  # Allow HTTP from anywhere
+  security_group_id = aws_security_group.db_security_group.id 
 
 }
