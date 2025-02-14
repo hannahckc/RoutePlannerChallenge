@@ -33,13 +33,6 @@ resource "aws_ecs_task_definition" "task_definition" {
         }
       ]
 
-      environment = [
-        { name = "POSTGRES_HOST", value = var.db_host },
-        { name = "POSTGRES_USER", value = "master" },
-        { name = "POSTGRES_PASSWORD", value = var.db_password },
-        { name = "POSTGRES_DB", value = "gatus" },
-      ]
-
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -82,6 +75,7 @@ resource "aws_ecs_service" "service" {
   launch_type                       = "FARGATE"
   scheduling_strategy               = "REPLICA"
   health_check_grace_period_seconds = 60
+  enable_execute_command            = true 
 
   network_configuration {
     subnets          = var.public_subnets

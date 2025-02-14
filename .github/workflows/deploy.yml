@@ -57,14 +57,26 @@ jobs:
       run: |
         echo "DB_HOST=$(terraform output -raw rds_host)" >> $GITHUB_ENV
         echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV
+        echo "ECS_CLUSTER=$(terraform output -raw ecs_cluster_name)" >> $GITHUB_ENV
+        echo "ECS_SERVICE=$(terraform output -raw ecs_service_name)" >> $GITHUB_ENV
       working-directory: terraform
 
 
-    - name: Run SQL script on RDS
+    - name: Get Running ECS Task ID
+      id: get_task
       run: |
-        PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d gatedb -f create-local-postgres-db.sql
-        working-directory: sql
-      working-directory: terraform
+          TASK_ID=$(aws ecs list-tasks --cluster $ECS_CLUSTER --service-name $ECS_SERVICE --query 'taskArns[0]' --output text)
+          echo "TASK_ID=$TASK_ID" >> $GITHUB_ENV
+
+    - name: Execute SQL Script in ECS
+      run: |
+          aws ecs execute-command \
+            --cluster $ECS_CLUSTER \
+            --task $TASK_ID \
+            --container your-container-name \
+            --command "PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USERNAME -d gatedb -f create-local-postgres-db.sql" \
+            --interactive
+      working-directory: sql
 
 
     - name: Make deploy.sh executable

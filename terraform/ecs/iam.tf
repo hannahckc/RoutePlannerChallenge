@@ -91,3 +91,29 @@ resource "aws_iam_policy" "ecs_task_role_policy" {
   name   = "${var.project_name}-task-role-policy-${var.env}"
   policy = data.aws_iam_policy_document.ecs_task_role_policy_document.json
 }
+
+resource "aws_iam_policy" "ecs_exec_policy" {
+  name        = "ECSExecPolicy"
+  description = "Allow ECS Exec to run commands"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "ecs:ExecuteCommand",
+          "ssm:StartSession",
+          "ssm:DescribeSessions",
+          "ssm:GetConnectionStatus",
+          "ssm:TerminateSession"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_exec_attachment" {
+  policy_arn = aws_iam_policy.ecs_exec_policy.arn
+  role       = aws_iam_role.ecs_task_execution_role.name
+}
