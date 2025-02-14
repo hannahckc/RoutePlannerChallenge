@@ -27,14 +27,12 @@ jobs:
       run: |
         brew install postgresql
 
-    - name: Install AWS Session Manager Plugin (macOS)
+    - name: Install AWS CLI on macOS
       run: |
         curl -L "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
-        unzip sessionmanager-bundle.zip
-        sudo mkdir -p /usr/local/sessionmanagerplugin
-        sudo mv sessionmanager-bundle /usr/local/sessionmanagerplugin
-        cd /usr/local/sessionmanagerplugin/sessionmanager-bundle
-        sudo ./install
+        sudo installer -pkg AWSCLIV2.pkg -target /
+        aws --version  # Verify installation
+
 
     - name: Set up environment variables
       run: |
