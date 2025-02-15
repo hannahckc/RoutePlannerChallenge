@@ -63,44 +63,6 @@ resource "aws_ecs_task_definition" "task_definition" {
   }
 }
 
-resource "aws_ecs_task_definition" "run_sql_script" {
-  family = "${var.project_name}-task-${var.env}"
-  containerDefinitions = jsonencode([
-    {
-      name: "flask-app-container",
-      image: aws_ecr_repository.ecr_repo_for_docker_image.repository_url,
-      memory: 512,
-      cpu: 256,
-      essential: true,
-      environment = [
-        { name: "DB_HOST", "value": aws_db_instance.application_database.address },
-        { name: "DB_USER", "value": var.db_username },
-        { name: "DB_PASSWORD", "value": var.db_password },
-        { name: "DB_PORT", "value": "5432" },
-        { name: "DB_NAME", "value": var.db_name }
-      ],
-      "command": [
-        "sh", "-c", "psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f /app/create-local-postgres-db.sql"
-      ],
-      "mountPoints": [
-        {
-          "sourceVolume": "sql-scripts",
-          "containerPath": "/app/create-local-postgres-db.sql"
-        }
-      ]
-    }
-  ])
-
-  volumes = [
-    {
-      "name": "sql",
-      "host": {
-        "sourcePath": "flaskApp/sql"
-      }
-    }
-  ]
-}
-
 
 
 resource "aws_service_discovery_http_namespace" "namespace" {

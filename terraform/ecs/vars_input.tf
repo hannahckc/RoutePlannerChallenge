@@ -30,7 +30,3 @@ variable "db_password" {
 variable "db_host" {
   type = string
 }
-
-variable "db_username" {
-  type = string
-}
