@@ -26,14 +26,14 @@ ARG DB_NAME
 # Set environment variables from build-time arguments
 ENV DB_HOST=$DB_HOST
 ENV DB_USER=$DB_USER
-ENV DB_PASSWORD=$DB_PASSWORD
+ENV PGPASSWORD=$DB_PASSWORD
 ENV DB_PORT=$DB_PORT
 ENV DB_NAME=$DB_NAME
 
 # Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN psql -h $DB_HOST -U $DB_USER -p $DB_PASSWORD -d $DB_NAME -f /app/create-local-postgres-db.sql
+RUN psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f /app/create-local-postgres-db.sql
 
 # Expose port 80 for the Flask app
 EXPOSE 80
