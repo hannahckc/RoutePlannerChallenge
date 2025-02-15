@@ -46,7 +46,10 @@ jobs:
 
 
     - name: Validate terraform
-      run: terraform validate
+      run: |
+        terraform validate \
+        -var "db_username=$DB_USERNAME" \
+        -var "db_password=$DB_PASSWORD"
       working-directory: terraform
 
     - name: Apply terraform
