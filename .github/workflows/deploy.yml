@@ -52,7 +52,9 @@ jobs:
 
     - name: Apply terraform
       run: |
-        terraform apply -auto-approve -target=aws_db_instance.application_database -target=aws_ecr_repository.ecr_repo_for_docker_image \
+        terraform apply -auto-approve \
+        -target=module.rds.aws_db_instance.application_database \
+        -target=module.ecr.aws_ecr_repository.ecr_repo_for_docker_image \
         -var "db_username=$DB_USERNAME" \
         -var "db_password=$$DB_PASSWORD"
       working-directory: terraform
@@ -84,9 +86,9 @@ jobs:
     - name: Create ECS instance containing docker image
       run: |
             terraform apply -auto-approve \
-            -target=aws_ecs_cluster.cluster \
-            -target=aws_ecs_task_definition.task_definition \
-            -target=aws_ecs_service.service \
+            -target=module.ecs.aws_ecs_cluster.cluster \
+            -target=module.ecs.aws_ecs_task_definition.task_definition \
+            -target=module.ecs.aws_ecs_service.service \
             -var "container_image=${{ env.ECR_WITH_TAG }}" \
             -var "db_username=$DB_USERNAME" \
             -var "db_password=$$DB_PASSWORD"
