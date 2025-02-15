@@ -19,10 +19,6 @@ variable "vpc_id" {
   type = string
 }
 
-variable "keyholding_cert_arn" {
-  type = string
-}
-
 variable "container_image" {
   type    = string
   default = ""
@@ -41,13 +37,6 @@ variable "db_username" {
   type = string
 }
 
-variable "domain_name" {
-  type = string
-}
-
-variable "hosted_zone_id" {
-  type = string
-}
 
 variable "repository_name" {
   type = string

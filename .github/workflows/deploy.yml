@@ -6,7 +6,7 @@ on:
       - createApp
 
 jobs:
-  deploy:
+  terraform-rds:
     runs-on: self-hosted
     
     steps:
@@ -32,8 +32,6 @@ jobs:
         brew install awscli
         aws --version
 
-
-
     - name: Set up environment variables
       run: |
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
@@ -41,6 +39,7 @@ jobs:
         echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
         echo "DB_USERNAME=$DB_USERNAME"
         echo "DB_PASSWORD=$DB_PASSWORD"
+        echo "AWS_REGION=$AWS_REGION"
 
 
     - name: Initialise terraform
@@ -49,7 +48,7 @@ jobs:
 
     - name: Apply terraform
       run: |
-        terraform apply -auto-approve \
+        terraform apply -auto-approve -target=aws_db_instance.application_database -target=aws_ecr_repository.ecr_repo_for_docker_image \
         -var "db_username=$DB_USERNAME" \
         -var "db_password=$DB_PASSWORD"
       working-directory: terraform
@@ -63,11 +62,13 @@ jobs:
       run: |
         echo "DB_HOST=$(terraform output -raw rds_host)" >> $GITHUB_ENV
         echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV
-        echo "ECS_CLUSTER=$(terraform output -raw ecs_cluster_name)" >> $GITHUB_ENV
-        echo "ECS_SERVICE=$(terraform output -raw ecs_service_name)" >> $GITHUB_ENV
         echo "ECR_URI=$(terraform output -raw repository_url)" >> $GITHUB_ENV
       working-directory: terraform
 
+  deploy docker image:
+    runs-on: self-hosted
+    
+    steps:
     - name: Make deploy.sh executable
       run: chmod +x scripts/deploy.sh
       working-directory: ${{ github.workspace }}
@@ -76,3 +77,15 @@ jobs:
       run: ./scripts/deploy.sh v1.0
       working-directory: ${{ github.workspace }}
       shell: bash
+
+  terraform-ecs:
+    runs-on: self-hosted
+
+    steps:
+    - name: Create ECS instance containing docker image
+      run: terraform apply -auto-approve \
+            -target=aws_ecs_cluster.cluster \
+            -target=aws_ecs_task_definition.task_definition \
+            -target=aws_ecs_service.service \
+            -auto-approve
+            -var "container_image=${{ env.ECR_WITH_TAG }}"
