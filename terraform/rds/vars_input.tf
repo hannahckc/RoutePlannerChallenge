@@ -9,10 +9,10 @@ variable "app_name" {}
 variable "ingress_access" {
     type = map(object({name = string, sg_id = string}))
 }
-variable "db_password" {
+variable "password" {
   type = string
 }
 
-variable "db_username" {
+variable "username" {
   type = string
 }
