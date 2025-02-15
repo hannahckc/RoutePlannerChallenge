@@ -67,6 +67,7 @@ jobs:
 
   deploy-docker-image:
     runs-on: self-hosted
+    needs: terraform-rds
     
     steps:
     - name: Make deploy.sh executable
@@ -80,6 +81,7 @@ jobs:
 
   terraform-ecs:
     runs-on: self-hosted
+    needs:   deploy-docker-image
 
     steps:
     - name: Create ECS instance containing docker image
