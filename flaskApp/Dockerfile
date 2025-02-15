@@ -30,6 +30,12 @@ ENV PGPASSWORD=$DB_PASSWORD
 ENV DB_PORT=$DB_PORT
 ENV DB_NAME=$DB_NAME
 
+RUN echo "DB_HOST: $DB_HOST"
+RUN echo "DB_USER: $DB_USER"
+RUN echo "PGPASSWORD: $PGPASSWORD"
+RUN echo "DB_PORT: $DB_PORT"
+RUN echo "DB_NAME: $DB_NAME"
+
 # Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
