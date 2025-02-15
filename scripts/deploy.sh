@@ -25,7 +25,7 @@ ls -ltr
 
 # Build the Docker image
 echo "Building Docker image..."
-docker build \
+docker build --platform linux/amd64 \
     --build-arg DB_HOST="$DB_HOST" \
     --build-arg DB_USERNAME="$DB_USERNAME" \
     --build-arg DB_PASSWORD="$DB_PASSWORD" \
