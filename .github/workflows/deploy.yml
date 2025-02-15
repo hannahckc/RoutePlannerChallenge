@@ -48,6 +48,8 @@ jobs:
         terraform destroy -auto-approve \
         -var "db_username=$DB_USERNAME" \
         -var "db_password=$$DB_PASSWORD"
+        -var "username=$DB_USERNAME" \
+        -var "password=$DB_PASSWORD"
       working-directory: terraform
 
     - name: Apply terraform for rds
