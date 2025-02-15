@@ -1,13 +1,15 @@
 # Use an official Python 3.11 runtime as a parent image
 FROM python:3.11-slim
 
+RUN pwd
+
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-COPY ../sql/create-local-postgres-db.sql /app/
+COPY ../../sql/create-local-postgres-db.sql /app/
 
 # Define build-time arguments
 ARG DB_HOST
