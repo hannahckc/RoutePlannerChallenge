@@ -9,7 +9,6 @@ fi
 # Variables
 AWS_REGION=${AWS_REGION}
 IMAGE_TAG=$1
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 ECR_URI="${ECR_URI}:${IMAGE_TAG}"
 
 echo "Region: $AWS_REGION"
