@@ -25,3 +25,12 @@ resource "aws_security_group_rule" "allow_http_traffic" {
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]  # This allows public access, you can restrict this to your IP
 }
+
+resource "aws_security_group_rule" "ecs_to_rds" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.db_security_group.id  # RDS Security Group
+  source_security_group_id = aws_security_group.service_security_group.id  # ECS Security Group
+}
