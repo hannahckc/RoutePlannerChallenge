@@ -45,4 +45,4 @@ EXPOSE 8080
 ENV FLASK_APP=app.py
 
 # Run the Flask app when the container starts
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
