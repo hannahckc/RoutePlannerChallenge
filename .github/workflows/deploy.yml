@@ -70,8 +70,8 @@ jobs:
 
     outputs:
       DB_HOST: ${{ steps.set_outputs_rds.outputs.DB_HOST }}
-      DB_USERNAME: ${{ steps.set_outputs_rds.outputs.DB_USERNAME }}
-      DB_PASSWORD: ${{ steps.set_outputs_rds.outputs.DB_PASSWORD }}
+      DB_USERNAME: ${{ steps.set_outputs_secrets.outputs.DB_USERNAME }}
+      DB_PASSWORD: ${{ steps.set_outputs_secrets.outputs.DB_PASSWORD }}
 
   deploy-docker-image:
     runs-on: self-hosted
