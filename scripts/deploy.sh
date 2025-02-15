@@ -18,6 +18,7 @@ echo "With tag: $ECR_WITH_TAG"
 
 
 cd ../flaskApp
+ls -ltr
 
 # Build the Docker image
 echo "Building Docker image..."
@@ -29,15 +30,15 @@ docker build \
     --build-arg DB_NAME="$DB_NAME" \
     -t $ECR_WITH_TAG .
 
-docker tag $ECR_URI $ECR_WITH_TAG
+docker tag $ECR_WITH_TAG $ECR_URI
 
 
 # Authenticate Docker to ECR
 echo "Authenticating Docker to ECR..."
-aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URI
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_WITH_TAG
 
 # Push the image to ECR
 echo "Pushing Docker image to ECR..."
-docker push $ECR_URI
+docker push $ECR_WITH_TAG
 
-echo "Image pushed to ECR: ${ECR_URI}"
+echo "Image pushed to ECR: ${ECR_WITH_TAG}"
