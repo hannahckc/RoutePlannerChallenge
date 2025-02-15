@@ -54,8 +54,8 @@ jobs:
       run: |
         terraform apply -auto-approve \
         -target=module.database \
-        -var "db_username=$DB_USERNAME" \
-        -var "db_password=$DB_PASSWORD"
+        -var "username=$DB_USERNAME" \
+        -var "password=$DB_PASSWORD"
       working-directory: terraform
 
     - name: Apply terraform for ecr
