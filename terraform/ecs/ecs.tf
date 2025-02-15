@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "task_definition" {
       portMappings = [
         {
           name          = "http"
-          containerPort = 5000
+          containerPort = 8080
           hostPort      = 8080
         }
       ]
