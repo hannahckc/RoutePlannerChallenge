@@ -37,6 +37,13 @@ variable "db_username" {
   type = string
 }
 
+variable "username" {
+  type = string
+}
+
+variable "password" {
+  type = string
+}
 
 variable "repository_name" {
   type = string
