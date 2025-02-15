@@ -38,6 +38,7 @@ jobs:
       run: |
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
         echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
+        echo "AWS_REGION=${{ secrets.AWSREGION }}" >> $GITHUB_ENVs
 
     - name: Initialise terraform
       run: terraform init
@@ -66,6 +67,7 @@ jobs:
         echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV
         echo "ECS_CLUSTER=$(terraform output -raw ecs_cluster_name)" >> $GITHUB_ENV
         echo "ECS_SERVICE=$(terraform output -raw ecs_service_name)" >> $GITHUB_ENV
+        echo "ECR_URI=$(terraform output -raw repository_url)" >> $GITHUB_ENV"
       working-directory: terraform
 
     - name: Make deploy.sh executable
