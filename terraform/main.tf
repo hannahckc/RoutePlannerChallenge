@@ -7,8 +7,6 @@ module "ecs" {
   region             = var.region
   container_image    = var.container_image
   env                = terraform.workspace
-  db_password        = var.db_password
-  db_host            = module.database.rds_host
 }
 
 module "database" {
