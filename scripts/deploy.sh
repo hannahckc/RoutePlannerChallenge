@@ -9,10 +9,13 @@ fi
 # Variables
 AWS_REGION=${AWS_REGION}
 IMAGE_TAG=$1
-ECR_URI="${ECR_URI}:${IMAGE_TAG}"
+ECR_URI=${ECR_URI}
+ECR_WITH_TAG="${ECR_URI}:${IMAGE_TAG}"
 
 echo "Region: $AWS_REGION"
 echo "ECR_URI = $ECR_URI"
+echo "With tag: $ECR_WITH_TAG"
+
 
 cd ../flaskApp
 
@@ -24,7 +27,10 @@ docker build \
     --build-arg DB_PASSWORD="$DB_PASSWORD" \
     --build-arg DB_PORT="$DB_PORT" \
     --build-arg DB_NAME="$DB_NAME" \
-    -t $ECR_URI .
+    -t $ECR_WITH_TAG .
+
+docker tag $ECR_URI $ECR_WITH_TAG
+
 
 # Authenticate Docker to ECR
 echo "Authenticating Docker to ECR..."
