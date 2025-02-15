@@ -56,6 +56,8 @@ jobs:
       run: |
         terraform apply -auto-approve \
         -target=module.database \
+        -var "db_username=$DB_USERNAME" \
+        -var "db_password=$$DB_PASSWORD" \
         -var "username=$DB_USERNAME" \
         -var "password=$DB_PASSWORD"
       working-directory: terraform
@@ -65,7 +67,9 @@ jobs:
         terraform apply -auto-approve \
         -target=module.ecr \
         -var "db_username=$DB_USERNAME" \
-        -var "db_password=$DB_PASSWORD"
+        -var "db_password=$$DB_PASSWORD" \
+        -var "username=$DB_USERNAME" \
+        -var "password=$DB_PASSWORD"
       working-directory: terraform
 
     - name: Check outputs
@@ -98,5 +102,7 @@ jobs:
             -target=module.ecs \
             -var "container_image=${{ env.ECR_WITH_TAG }}" \
             -var "db_username=$DB_USERNAME" \
-            -var "db_password=$$DB_PASSWORD"
+            -var "db_password=$$DB_PASSWORD" \
+            -var "username=$DB_USERNAME" \
+            -var "password=$DB_PASSWORD"
       working-directory: terraform
