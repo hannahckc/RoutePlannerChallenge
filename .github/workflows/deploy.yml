@@ -81,3 +81,4 @@ jobs:
             -target=aws_ecs_task_definition.task_definition \
             -target=aws_ecs_service.service \
             -var "container_image=${{ env.ECR_WITH_TAG }}"
+      working-directory: terraform
