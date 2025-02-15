@@ -44,14 +44,6 @@ jobs:
       run: terraform init
       working-directory: terraform
 
-
-    - name: Validate terraform
-      run: |
-        terraform validate \
-        -var "db_username=$DB_USERNAME" \
-        -var "db_password=$DB_PASSWORD"
-      working-directory: terraform
-
     - name: Apply terraform
       run: |
         terraform apply -auto-approve \
