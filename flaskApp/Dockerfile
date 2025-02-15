@@ -33,7 +33,7 @@ ENV DB_NAME=$DB_NAME
 # Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f /app/create-local-postgres-db.sql
+RUN psql -h $DB_HOST -U $DB_USER -p $DB_PASSWORD -d $DB_NAME -f /app/create-local-postgres-db.sql
 
 # Expose port 80 for the Flask app
 EXPOSE 80
