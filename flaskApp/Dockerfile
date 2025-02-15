@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-COPY create-local-postgres-db.sql /app/
+COPY ../sq/create-local-postgres-db.sql /app/
 
 # Define build-time arguments
 ARG DB_HOST
