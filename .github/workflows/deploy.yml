@@ -68,6 +68,11 @@ jobs:
 
       working-directory: terraform
 
+    outputs:
+      DB_HOST: ${{ steps.set_outputs_rds.outputs.DB_HOST }}
+      DB_USERNAME: ${{ steps.set_outputs_rds.outputs.DB_USERNAME }}
+      DB_PASSWORD: ${{ steps.set_outputs_rds.outputs.DB_PASSWORD }}
+
   deploy-docker-image:
     runs-on: self-hosted
     needs: terraform-rds
@@ -79,8 +84,8 @@ jobs:
         echo "DB_HOST: ${{ needs.terraform-rds.set_outputs_rds_ecr.outputs.DB_HOST }}"
         echo "DB_PORT: ${{ needs.terraform-rds.set_outputs_rds_ecr.outputs.DB_PORT }}"
         echo "ECR_URI: ${{ needs.terraform-rds.set_outputs_rds_ecr.outputs.ECR_URI }}"
-        echo "DB_USERNAME: ${{ needs.terraform-rds.set_outputs_secrets.outputs.DB_USERNAME }}"
-        echo "DB_PASSWORD: ${{ needs.terraform-rds.set_outputs_secrets.outputs.DB_PASSWORD }}"
+        echo "DB_USERNAME: ${{ needs.terraform-rds.outputs.DB_USERNAME }}"
+        echo "DB_PASSWORD: ${{ needs.terraform-rds.outputs.DB_PASSWORD }}"
 
     - name: Make deploy.sh executable
       run: chmod +x scripts/deploy.sh
