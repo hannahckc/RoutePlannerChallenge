@@ -44,7 +44,10 @@ jobs:
       working-directory: terraform
 
     - name: Destroy terraform
-      run: terraform destroy
+      run: |
+        terraform destroy \
+        -var "db_username=$DB_USERNAME" \
+        -var "db_password=$$DB_PASSWORD"
       working-directory: terraform
 
     - name: Apply terraform
