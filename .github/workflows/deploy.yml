@@ -53,7 +53,7 @@ jobs:
     - name: Apply terraform for rds
       run: |
         terraform apply -auto-approve \
-        -target=module.rds \
+        -target=module.database \
         -var "db_username=$DB_USERNAME" \
         -var "db_password=$DB_PASSWORD"
       working-directory: terraform
