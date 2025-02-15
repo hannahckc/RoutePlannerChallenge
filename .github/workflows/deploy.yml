@@ -46,21 +46,21 @@ jobs:
       run: terraform init
       working-directory: terraform
 
-    #- name: Destroy terraform
-    #  run: |
-    #    terraform destroy -auto-approve \
-    #    -var "db_username=$DB_USERNAME" \
-    #    -var "db_password=$$DB_PASSWORD" \
-    #    -var "username=$DB_USERNAME" \
-    #    -var "password=$DB_PASSWORD"
-    #  working-directory: terraform
+    - name: Destroy terraform
+      run: |
+        terraform destroy -auto-approve \
+        -var "db_username=$DB_USERNAME" \
+        -var "db_password=$DB_PASSWORD" \
+        -var "username=$DB_USERNAME" \
+        -var "password=$DB_PASSWORD"
+      working-directory: terraform
 
     - name: Apply terraform for rds
       run: |
         terraform apply -auto-approve \
         -target=module.database \
         -var "db_username=$DB_USERNAME" \
-        -var "db_password=$$DB_PASSWORD" \
+        -var "db_password=$DB_PASSWORD" \
         -var "username=$DB_USERNAME" \
         -var "password=$DB_PASSWORD"
       working-directory: terraform
@@ -70,7 +70,7 @@ jobs:
         terraform apply -auto-approve \
         -target=module.ecr \
         -var "db_username=$DB_USERNAME" \
-        -var "db_password=$$DB_PASSWORD" \
+        -var "db_password=$DB_PASSWORD" \
         -var "username=$DB_USERNAME" \
         -var "password=$DB_PASSWORD"
       working-directory: terraform
@@ -105,7 +105,7 @@ jobs:
             -target=module.ecs \
             -var "container_image=$ECR_WITH_TAG" \
             -var "db_username=$DB_USERNAME" \
-            -var "db_password=$$DB_PASSWORD" \
+            -var "db_password=$DB_PASSWORD" \
             -var "username=$DB_USERNAME" \
             -var "password=$DB_PASSWORD"
       working-directory: terraform
