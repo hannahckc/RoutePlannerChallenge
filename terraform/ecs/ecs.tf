@@ -25,6 +25,13 @@ resource "aws_ecs_task_definition" "task_definition" {
       image     = var.container_image
       essential = true
 
+      environment = [
+        {
+          name: "DB_PASSWORD",
+          value: var.db_password
+        }
+      ]
+
       portMappings = [
         {
           name          = "http"

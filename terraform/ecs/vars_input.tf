@@ -22,3 +22,7 @@ variable "container_image" {
 variable "env" {
   type = string
 }
+
+variable "db_password" {
+  type = string
+}
