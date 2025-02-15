@@ -38,22 +38,26 @@ jobs:
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV # Set output
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV  # Set output
           echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV # Set output
-          echo "PASSWORD: ${DB_PASSWORD}"
-          echo "USER: ${DB_USERNAME}"
-          echo "REGION: ${AWS_REGION}"
+          
+
+    - name: Check env vars
+      run: |
+        echo "PASSWORD: ${DB_PASSWORD}"
+        echo "USER: ${DB_USERNAME}"
+        echo "REGION: ${AWS_REGION}"
 
     - name: Initialise terraform
       run: terraform init
       working-directory: terraform
 
-    - name: Destroy terraform
-      run: |
-        terraform destroy -auto-approve \
-        -var "db_username=$DB_USERNAME" \
-        -var "db_password=$DB_PASSWORD" \
-        -var "username=$DB_USERNAME" \
-        -var "password=$DB_PASSWORD"
-      working-directory: terraform
+    #- name: Destroy terraform
+    #  run: |
+    #    terraform destroy -auto-approve \
+    #    -var "db_username=$DB_USERNAME" \
+    #    -var "db_password=$DB_PASSWORD" \
+    #    -var "username=$DB_USERNAME" \
+    #    -var "password=$DB_PASSWORD"
+    #  working-directory: terraform
 
     - name: Apply terraform for rds
       run: |
