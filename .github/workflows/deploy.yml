@@ -35,9 +35,9 @@ jobs:
     - name: Set up environment variables
       id: set_outputs_secrets
       run: |
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> "$GITHUB_ENV"  # Set output
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> "$GITHUB_ENV"  # Set output
-          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> "$GITHUB_ENV"  # Set output
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> $GITHUB_ENV"  # Set output
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }} >> $GITHUB_ENV"  # Set output
+          echo "AWS_REGION=${{ secrets.AWS_REGION }} >> $GITHUB_ENV"  # Set output
 
     - name: Initialise terraform
       run: terraform init
@@ -58,9 +58,9 @@ jobs:
     - name: Set up environment variables
       id: set_outputs_rds_ecr
       run: |
-        echo "DB_HOST=$(terraform output -raw rds_host) >> "$GITHUB_ENV" 
-        echo "DB_PORT=$(terraform output -raw rds_port) >> "$GITHUB_ENV" 
-        echo "ECR_URI=$(terraform output -raw repository_url) >> "$GITHUB_ENV" 
+        echo "DB_HOST=$(terraform output -raw rds_host) >> $GITHUB_ENV" 
+        echo "DB_PORT=$(terraform output -raw rds_port) >> $GITHUB_ENV" 
+        echo "ECR_URI=$(terraform output -raw repository_url) >> $GITHUB_ENV" 
 
       working-directory: terraform
 
