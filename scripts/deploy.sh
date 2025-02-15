@@ -12,6 +12,8 @@ IMAGE_TAG=$1
 ECR_URI=${ECR_URI}
 ECR_WITH_TAG="${ECR_URI}:${IMAGE_TAG}"
 
+echo "ECR_WITH_TAG=$ECR_WITH_TAG" >> $GITHUB_ENV
+
 echo "Region: $AWS_REGION"
 echo "ECR_URI = $ECR_URI"
 echo "With tag: $ECR_WITH_TAG"
