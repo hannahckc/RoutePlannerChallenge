@@ -74,6 +74,14 @@ jobs:
     
     steps:
 
+    - name: Check outputs
+      run: |
+        echo "DB_HOST: ${{ needs.terraform-rds.set_outputs_rds_ecr.outputs.DB_HOST }}"
+        echo "DB_PORT: ${{ needs.terraform-rds.set_outputs_rds_ecr.outputs.DB_PORT }}"
+        echo "ECR_URI: ${{ needs.terraform-rds.set_outputs_rds_ecr.outputs.ECR_URI }}"
+        echo "DB_USERNAME: ${{ needs.terraform-rds.set_outputs_secrets.outputs.DB_USERNAME }}"
+        echo "DB_PASSWORD: ${{ needs.terraform-rds.set_outputs_secrets.outputs.DB_PASSWORD }}"
+
     - name: Make deploy.sh executable
       run: chmod +x scripts/deploy.sh
       working-directory: ${{ github.workspace }}
