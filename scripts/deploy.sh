@@ -17,7 +17,7 @@ echo "ECR_URI = $ECR_URI"
 echo "With tag: $ECR_WITH_TAG"
 
 
-cd ../flaskApp
+cd flaskApp
 ls -ltr
 
 # Build the Docker image
