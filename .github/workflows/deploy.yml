@@ -38,7 +38,7 @@ jobs:
       run: |
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
         echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
-        echo "AWS_REGION=${{ secrets.AWSREGION }}" >> $GITHUB_ENVs
+        echo "AWS_REGION=${{ secrets.AWSREGION }}" >> $GITHUB_ENV
 
     - name: Initialise terraform
       run: terraform init
