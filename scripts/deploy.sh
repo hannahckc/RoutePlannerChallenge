@@ -8,10 +8,13 @@ fi
 
 # Variables
 AWS_REGION=${AWS_REGION}
-REPOSITORY_NAME="my-docker-repo" # This should match the repository name in Terraform
 IMAGE_TAG=$1
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 ECR_URI="${ECR_URI}:${IMAGE_TAG}"
+
+echo "Region: $AWS_REGION"
+echo "AWS_ACCOUNT = $AWS_ACCOUNT_ID"
+echo "ECR_URI = $ECR_URI"
 
 # Build the Docker image
 echo "Building Docker image..."
