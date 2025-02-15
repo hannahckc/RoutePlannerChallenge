@@ -46,7 +46,7 @@ jobs:
     - name: Apply terraform
       run: |
         terraform apply -auto-approve -target=aws_db_instance.application_database -target=aws_ecr_repository.ecr_repo_for_docker_image \
-        -var "db_username=${{ steps.set_outputs_secrets.outputs.DB_USERNAME }}"" \
+        -var "db_username=${{ steps.set_outputs_secrets.outputs.DB_USERNAME }}" \
         -var "db_password=${{ steps.set_outputs_secrets.outputs.DB_PASSWORD }}"
       working-directory: terraform
 
