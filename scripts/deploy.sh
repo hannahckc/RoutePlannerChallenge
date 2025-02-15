@@ -16,8 +16,9 @@ echo "Region: $AWS_REGION"
 echo "ECR_URI = $ECR_URI"
 echo "With tag: $ECR_WITH_TAG"
 
-
+pwd
 cd flaskApp
+pwd
 ls -ltr
 
 # Build the Docker image
