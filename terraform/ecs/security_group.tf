@@ -23,7 +23,7 @@ resource "aws_security_group_rule" "ecs_to_rds" {
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.db_security_group.id  # Targeting RDS SG
-  source_security_group_id = aws_security_group.service_security_group.id  # Allow traffic from ECS service SG
+  security_group_id        = module.database.aws_security_group.db_security_group.id  # Targeting RDS SG
+  source_security_group_id = module.database.aws_security_group.service_security_group.id  # Allow traffic from ECS service SG
   description              = "Allow ECS service to connect to RDS database"
 }
