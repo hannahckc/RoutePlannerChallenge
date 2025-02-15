@@ -35,9 +35,9 @@ jobs:
     - name: Set up environment variables
       id: set_outputs_secrets
       run: |
-        echo "::set-output name=DB_PASSWORD::${{ secrets.DB_PASSWORD }}"
-        echo "::set-output name=DB_USERNAME::${{ secrets.DB_USERNAME }}"
-        echo "::set-output name=AWS_REGION::${{ secrets.AWS_REGION }}"
+          echo "DB_HOST=${{ secrets.DB_PASSWORD }}" >> "$GITHUB_OUTPUT"  # Set output
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> "$GITHUB_OUTPUT"  # Set output
+          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> "$GITHUB_OUTPUT"  # Set output
 
     - name: Initialise terraform
       run: terraform init
