@@ -37,9 +37,9 @@ jobs:
     - name: Set up environment variables
       run: |
         echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
+        echo "DB_USERNAMENAME=${{ secrets.DB_USERNAMENAME }}" >> $GITHUB_ENV
         echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
-        echo "DB_USERNAME=$DB_USERNAME"
+        echo "DB_USERNAMENAME=$DB_USERNAMENAME"
         echo "DB_PASSWORD=$DB_PASSWORD"
 
 
@@ -50,7 +50,7 @@ jobs:
     - name: Apply terraform
       run: |
         terraform apply -auto-approve \
-        -var "db_username=$DB_USERNAME" \
+        -var "db_username=$DB_USERNAMENAME" \
         -var "db_password=$DB_PASSWORD"
       working-directory: terraform
 

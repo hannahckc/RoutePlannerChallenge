@@ -18,20 +18,20 @@ COPY sql/create-local-postgres-db.sql /app/
 
 # Define build-time arguments
 ARG DB_HOST
-ARG DB_USER
+ARG DB_USERNAME
 ARG DB_PASSWORD
 ARG DB_PORT
 ARG DB_NAME
 
 # Set environment variables from build-time arguments
 ENV DB_HOST=$DB_HOST
-ENV DB_USER=$DB_USER
+ENV DB_USERNAME=$DB_USERNAME
 ENV PGPASSWORD=$DB_PASSWORD
 ENV DB_PORT=$DB_PORT
 ENV DB_NAME=$DB_NAME
 
 RUN echo "DB_HOST: $DB_HOST"
-RUN echo "DB_USER: $DB_USER"
+RUN echo "DB_USERNAME: $DB_USERNAME"
 RUN echo "PGPASSWORD: $PGPASSWORD"
 RUN echo "DB_PORT: $DB_PORT"
 RUN echo "DB_NAME: $DB_NAME"
@@ -39,7 +39,7 @@ RUN echo "DB_NAME: $DB_NAME"
 # Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f /app/create-local-postgres-db.sql
+RUN psql -h $DB_HOST -U $DB_USERNAME -d $DB_NAME -f /app/create-local-postgres-db.sql
 
 # Expose port 80 for the Flask app
 EXPOSE 80
