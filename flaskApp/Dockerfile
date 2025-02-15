@@ -6,6 +6,10 @@ WORKDIR /app
 
 RUN ls
 
+# Install the PostgreSQL client (psql)
+RUN apt-get update && \
+    apt-get install -y postgresql-client && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy the current directory contents into the container at /app
 COPY . /app
