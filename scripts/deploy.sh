@@ -12,8 +12,9 @@ IMAGE_TAG=$1
 ECR_URI="${ECR_URI}:${IMAGE_TAG}"
 
 echo "Region: $AWS_REGION"
-echo "AWS_ACCOUNT = $AWS_ACCOUNT_ID"
 echo "ECR_URI = $ECR_URI"
+
+cd ../flaskApp
 
 # Build the Docker image
 echo "Building Docker image..."
