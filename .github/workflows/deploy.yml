@@ -45,7 +45,7 @@ jobs:
 
     - name: Destroy terraform
       run: |
-        terraform destroy \
+        terraform destroy -auto-approve \
         -var "db_username=$DB_USERNAME" \
         -var "db_password=$$DB_PASSWORD"
       working-directory: terraform
