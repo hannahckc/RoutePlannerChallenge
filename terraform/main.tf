@@ -37,26 +37,10 @@ output "repository_url" {
   value = module.ecr.repository_url
 }
 
-output "security_group_id_ecs" {
-  value = module.ecs.security_group_id
-}
-
-output "security_group_id_rds" {
-  value = module.database.security_group_id
-}
-
 output "rds_host" {
   value = module.database.rds_host
 }
 
 output "rds_port" {
   value = module.database.rds_port
-}
-
-output "ecs_cluster_name" {
-  value = module.ecs.ecs_cluster_name
-}
-
-output "ecs_service_name" {
-  value = module.ecs.ecs_service_name
 }
