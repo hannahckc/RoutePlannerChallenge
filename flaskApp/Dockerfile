@@ -10,7 +10,7 @@ RUN ls
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-COPY ../../sql/create-local-postgres-db.sql /app/
+COPY sql/create-local-postgres-db.sql /app/
 
 # Define build-time arguments
 ARG DB_HOST
