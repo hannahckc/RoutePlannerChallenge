@@ -17,7 +17,8 @@ resource "aws_vpc_security_group_egress_rule" "ecs_allow_egress" {
 }
 
 # Allow inbound traffic from the public internet on port 8080 (HTTP)
-resource "aws_vpc_security_group_ingress_rule" "allow_http_traffic" {
+resource "aws_security_group_rule" "allow_http_traffic" {
+  type              = "ingress"
   security_group_id = aws_security_group.service_security_group.id
   from_port         = 8080
   to_port           = 8080
