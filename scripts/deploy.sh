@@ -28,7 +28,6 @@ docker build \
     --build-arg DB_USERNAME="$DB_USERNAME" \
     --build-arg DB_PASSWORD="$DB_PASSWORD" \
     --build-arg DB_PORT="$DB_PORT" \
-    --build-arg DB_NAME="$DB_NAME" \
     -t $ECR_WITH_TAG .
 
 docker tag $ECR_WITH_TAG $ECR_URI

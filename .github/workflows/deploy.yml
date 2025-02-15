@@ -33,14 +33,11 @@ jobs:
         aws --version
 
     - name: Set up environment variables
+      id: set_outputs_secrets
       run: |
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
-        echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
-        echo "DB_USERNAME=$DB_USERNAME"
-        echo "DB_PASSWORD=$DB_PASSWORD"
-        echo "AWS_REGION=$AWS_REGION"
-
+        echo "::set-output name=DB_PASSWORD::${{ secrets.DB_PASSWORD }}"
+        echo "::set-output name=DB_USERNAME::${{ secrets.DB_USERNAME }}"
+        echo "::set-output name=AWS_REGION::${{ secrets.AWS_REGION }}"
 
     - name: Initialise terraform
       run: terraform init
@@ -49,8 +46,8 @@ jobs:
     - name: Apply terraform
       run: |
         terraform apply -auto-approve -target=aws_db_instance.application_database -target=aws_ecr_repository.ecr_repo_for_docker_image \
-        -var "db_username=$DB_USERNAME" \
-        -var "db_password=$DB_PASSWORD"
+        -var "db_username=${{ steps.set_outputs_secrets.outputs.DB_USERNAME }}"" \
+        -var "db_password=${{ steps.set_outputs_secrets.outputs.DB_PASSWORD }}"
       working-directory: terraform
 
     - name: Check outputs
@@ -59,10 +56,16 @@ jobs:
 
 
     - name: Set up environment variables
+      id: set_outputs_rds_ecr
       run: |
-        echo "DB_HOST=$(terraform output -raw rds_host)" >> $GITHUB_ENV
-        echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV
-        echo "ECR_URI=$(terraform output -raw repository_url)" >> $GITHUB_ENV
+        DB_HOST=$(terraform output -raw rds_host)
+        DB_PORT=$(terraform output -raw rds_port)
+        ECR_URI=$(terraform output -raw repository_url)
+
+        echo "::set-output name=DB_HOST::$DB_HOST"
+        echo "::set-output name=DB_PORT::$DB_PORT"
+        echo "::set-output name=ECR_URI::$ECR_URI"
+
       working-directory: terraform
 
   deploy-docker-image:
@@ -70,12 +73,24 @@ jobs:
     needs: terraform-rds
     
     steps:
+
     - name: Make deploy.sh executable
       run: chmod +x scripts/deploy.sh
       working-directory: ${{ github.workspace }}
 
     - name: Run deploy docker script
-      run: ./scripts/deploy.sh v1.0
+      id: run_deploy_sh
+      env:
+        DB_HOST: ${{ needs.terraform-rds.set_outputs_rds_ecr.outputs.DB_HOST }}
+        DB_PORT: ${{ needs.terraform-rds.set_outputs_rds_ecr.outputs.DB_PORT }}
+        ECR_URI: ${{ needs.terraform-rds.set_outputs_rds_ecr.outputs.ECR_URI }}
+        DB_USERNAME: ${{ needs.terraform-rds.set_outputs_secrets.outputs.DB_USERNAME }}
+        DB_PASSWORD: ${{ needs.terraform-rds.set_outputs_secrets.outputs.DB_PASSWORD }}
+
+      run: |
+        ./scripts/deploy.sh v1.0
+        echo "::set-output name=ECR_WITH_TAG::$ECR_WITH_TAG"
+
       working-directory: ${{ github.workspace }}
       shell: bash
 
@@ -85,6 +100,8 @@ jobs:
 
     steps:
     - name: Create ECS instance containing docker image
+      env:
+        ECR_WITH_TAG: $ {{ needs.deploy-docker-image.run_deploy_sh.outputs.ECR_WITH_TAG}}
       run: terraform apply -auto-approve \
             -target=aws_ecs_cluster.cluster \
             -target=aws_ecs_task_definition.task_definition \
