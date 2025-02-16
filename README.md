@@ -182,3 +182,24 @@ You can also add other arguments to the tfvars file, if you dont want to use the
 </li>
 </ul>
 
+<h3> API docs </h3>
+
+API documentation has been created used Swagger.
+
+Once the app is up and running, you can access documentation and examples of the endpoints, visit
+```
+http://{ecs_public_ip}:8080/apidocs
+```
+You can retrieve the piblic IP of the task from the AWS console (ECS -> Clusters -> Task) or from the outputs of the Github actions.
+
+<h3> Testing </h3>
+
+Tests have been created using pytest for each of the endpoints. Currently there are permission issues I believe which means the pytest command is not running using Github actions. It can be run from your host machine like this, getting the variables from the Github actions log:
+```
+  aws ecs execute-command \
+  --cluster ${ECS_CLUSTER_NAME} \
+  --task ${TASK_ID} \
+  --container ${CONTAINER_NAME} \
+  --command "pytest" \
+  --interactive
+```

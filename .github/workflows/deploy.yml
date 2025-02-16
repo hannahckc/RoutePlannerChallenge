@@ -167,5 +167,6 @@ jobs:
         --task ${TASK_ID} \
         --container ${CONTAINER_NAME} \
         --command "pytest" \
-        --interactive
+        --interactive \
+        --debug
       working-directory: flaskApp
