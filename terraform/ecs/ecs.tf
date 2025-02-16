@@ -179,3 +179,17 @@ resource "aws_ecs_service" "service" {
 
 }
 
+data "aws_network_interface" "ecs_task_eni" {
+  # Only fetch the ENI of the task from ECS Service
+  filter {
+    name   = "attachment.instance-owner-id"
+    values = ["amazon-ecs"]
+  }
+
+  filter {
+    name   = "subnet-id"
+    values = var.public_subnets
+  }
+}
+
+
