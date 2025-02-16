@@ -2,7 +2,7 @@
 
 # Set the ECS cluster and task ARN as environment variables (or pass them from your CI/CD system)
 ECS_CLUSTER_NAME="${ECS_CLUSTER_NAME}"
-TASK_ARN="${TASK_ARN}"
+TASK_ID="${TASK_ID}"
 
 # Timeout after waiting too long (e.g., 300 seconds or 5 minutes)
 TIMEOUT=300
@@ -14,7 +14,7 @@ while true; do
   # Get the current status of the task's ExecuteCommandAgent
   AGENT_STATUS=$(aws ecs describe-tasks \
     --cluster "$ECS_CLUSTER_NAME" \
-    --tasks "$TASK_ARN" \
+    --tasks "$TASK_ID" \
     --query "tasks[0].managedAgents[?name=='ExecuteCommandAgent'].lastStatus" \
     --output text)
 
