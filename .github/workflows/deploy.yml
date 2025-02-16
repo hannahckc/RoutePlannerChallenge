@@ -91,8 +91,10 @@ jobs:
 
       working-directory: terraform
 
-    - name: Make deploy.sh executable
-      run: chmod +x scripts/deploy.sh
+    - name: Make scripts executable
+      run: |
+        chmod +x scripts/deploy.sh
+        chmod +x scripts/check_exec_manager.sh
       working-directory: ${{ github.workspace }}
 
     - name: Run deploy docker script
