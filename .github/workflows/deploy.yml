@@ -113,9 +113,9 @@ jobs:
         echo "TASK_ARN=$TASK_ARN" >> $GITHUB_ENV
 
         # Extract Task ID from ARN
-       TASK_ID=$(echo $TASK_ARN | awk -F'/' '{print $2}')
+        TASK_ID=$(echo $TASK_ARN | awk -F'/' '{print $2}')
     
-    echo "TASK_ID=$TASK_ID" >> $GITHUB_ENV
+        echo "TASK_ID=$TASK_ID" >> $GITHUB_ENV
 
     - name: Describe ECS Task to get ENI ID
       run: |
