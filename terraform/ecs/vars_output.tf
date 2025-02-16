@@ -1,5 +1,5 @@
 output "ecs_cluster_name" {
-  value = aws_ecs_cluster.my_cluclusterster.name
+  value = aws_ecs_cluster.cluster.name
   description = "The name of the ECS cluster"
 }
 
