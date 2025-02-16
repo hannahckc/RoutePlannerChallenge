@@ -12,10 +12,11 @@ resource "aws_security_group" "db_security_group" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
+  # Allow traffic from anywhere to port 5432 (Postgres)
   ingress {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Allow traffic from anywhere
+    cidr_blocks = ["0.0.0.0/0"]  
   }
 }
