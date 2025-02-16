@@ -20,6 +20,10 @@ resource "aws_ecs_cluster" "cluster" {
   }
 } # End of cluster
 
+module 'iam' {
+  source = "./iam"
+}
+
 # Deploy docker container with flask app inside to ECS
 resource "aws_ecs_task_definition" "task_definition" {
 
@@ -36,10 +40,10 @@ resource "aws_ecs_task_definition" "task_definition" {
   network_mode             = "awsvpc"
 
   # The IAM role that grants permissions for ECS to pull images & write logs
-  task_role_arn            = aws_iam_role.ecs_task_role.arn
+  task_role_arn            = module.iam.ecs_task_role_arn
 
   # IAM role that the container itself uses
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = module.iam.ecs_task_execution_role_arn
 
   # Define docker container to put in ECS
   container_definitions = jsonencode([
@@ -81,7 +85,7 @@ resource "aws_ecs_task_definition" "task_definition" {
           # Name of the CloudWatch log group to which the logs will be sent
           "awslogs-group"         = "/aws/ecs/${var.project_name}"
 
-          # Automatically creates the log group if it doesn't already exist.
+          # Automatically creates the log group if it doesn't already exist
           "awslogs-create-group"  = "true"
 
           # Specifies the AWS region where CloudWatch logs will be stored 
@@ -159,6 +163,7 @@ resource "aws_ecs_service" "service" {
 
     # CS will revert to the last known good state if there is a problem with the deployment
     rollback = true
+    
   } # End of deployment_circuit_breaker
 
   # Maximum number of tasks you can have during a deployment, as a percentage of the desired task count
