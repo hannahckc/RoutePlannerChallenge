@@ -182,6 +182,13 @@ You can also add other arguments to the tfvars file, if you dont want to use the
 </li>
 </ul>
 
+<h3> Accessing endpoints </h3>
+
+Once the app is running, you need to get the public IP of the task from the AWS console (ECS -> Clusters -> Task) or from the outputs of the Github actions. Then go to, eg
+```
+http://{IP}:8080/gates
+```
+
 <h3> API docs </h3>
 
 API documentation has been created used Swagger.
@@ -190,7 +197,7 @@ Once the app is up and running, you can access documentation and examples of the
 ```
 http://{ecs_public_ip}:8080/apidocs
 ```
-You can retrieve the piblic IP of the task from the AWS console (ECS -> Clusters -> Task) or from the outputs of the Github actions.
+You can retrieve the public IP of the task from the AWS console (ECS -> Clusters -> Task) or from the outputs of the Github actions.
 
 <h3> Testing </h3>
 
