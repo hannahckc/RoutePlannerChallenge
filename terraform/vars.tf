@@ -49,4 +49,14 @@ variable "db_username" {
   type = string
 }
 
+variable "username" {
+  type = string
+  default = ""
+}
+
+variable "password" {
+  type = string
+  default = ""
+}
+
 
