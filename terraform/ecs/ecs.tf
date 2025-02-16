@@ -20,7 +20,7 @@ resource "aws_ecs_cluster" "cluster" {
   }
 } # End of cluster
 
-module 'iam' {
+module "iam" {
   source = "./iam"
 }
 
