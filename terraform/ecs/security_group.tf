@@ -16,6 +16,14 @@ resource "aws_security_group" "service_security_group" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
+  egress {
+    # Allow outbound HTTPS traffic to Systems Manager
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow all outbound traffic (could be restricted further if needed)
+  }
+
 # Allow incoming traffic from port 8080 (where Flask app is running)
 # This means external clients (e.g., browsers, other services) can reach Flask app running inside ECS by sending requests to port 8080
   
