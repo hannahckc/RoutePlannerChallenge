@@ -22,6 +22,11 @@ resource "aws_ecs_cluster" "cluster" {
 
 module "iam" {
   source = "./iam"
+  project_name = var.project_name
+  env          = var.env
+  vpc_id       = var.vpc_id
+
+
 }
 
 # Deploy docker container with flask app inside to ECS
