@@ -3,7 +3,13 @@
 data "aws_iam_policy_document" "ecs_task_execution_policy_logs_document" {
   statement {
     actions = [
-      "logs:CreateLogGroup"
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:DescribeLogGroups",
+      "logs:DescribeLogStreams",
+      "logs:PutLogEvents",
+      "logs:PutRetentionPolicy",
+      "logs:PutResourcePolicy"
     ]
     resources = ["*"]
   }
@@ -36,6 +42,7 @@ data "aws_iam_policy_document" "ecs_task_role_policy_document" {
 # These permissions allow the ECS task to interact with AWS CloudWatch Logs
   statement {
     actions = [
+      "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:DescribeLogGroups",
       "logs:DescribeLogStreams",
