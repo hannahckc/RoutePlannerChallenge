@@ -119,7 +119,7 @@ jobs:
 
     - name: Describe ECS Task to get Public IP
       run: |
-        PUBLIC_IP=$(aws ecs describe-tasks --cluster $ECS_CLUSTER_NAME --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name=='publicIPv4'].value" --output text)
+        PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query "NetworkInterfaces[0].Association.PublicIp" --output text )
         echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
     
     - name: Run pytest tests
