@@ -15,7 +15,7 @@ while true; do
   AGENT_STATUS=$(aws ecs describe-tasks \
     --cluster "$ECS_CLUSTER_NAME" \
     --tasks "$TASK_ID" \
-    --query "tasks[0].managedAgents[?name=='ExecuteCommandAgent'].lastStatus" \
+    --query "tasks[0].containers[0].managedAgents[0].lastStatus" \
     --output text)
 
   echo "Current ExecuteCommandAgent status: $AGENT_STATUS"
