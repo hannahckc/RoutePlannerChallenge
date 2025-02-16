@@ -36,6 +36,10 @@ jobs:
         brew install awscli
         aws --version
 
+    - name: Install session manager plugin
+      run: |
+        brew install --cask session-manager-plugin
+
     - name: Set up environment variables
       id: set_outputs_secrets
       run: |
