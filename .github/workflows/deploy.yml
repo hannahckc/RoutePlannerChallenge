@@ -150,6 +150,6 @@ jobs:
         aws ecs execute-command \
         --cluster ${ECS_CLUSTER_NAME} \
         --task ${TASK_ID} \
-        --container${CONTAINER_NAME} \
+        --container ${CONTAINER_NAME} \
         --command "pytest" \
         --interactive
