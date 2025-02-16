@@ -21,11 +21,8 @@ module "database" {
   app_name             = var.project_name
   db_subnet_group_name = var.db_subnet_group_name
   vpc_id               = var.vpc_id
-  username          = var.username
-  password          = var.password
-  ingress_access = {
-    gatus = { name : "gatus uptime monitor", sg_id : module.ecs.security_group_id }
-  }
+  username          = var.db_username
+  password          = var.db_password
 }
 
 module "ecr" {
