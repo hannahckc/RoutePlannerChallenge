@@ -36,15 +36,12 @@ jobs:
       id: set_outputs_secrets
       run: |
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV # Set output
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV  # Set output
-          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV # Set output
-          
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV  # Set output          
 
     - name: Check env vars
       run: |
         echo "PASSWORD: ${DB_PASSWORD}"
         echo "USER: ${DB_USERNAME}"
-        echo "REGION: ${AWS_REGION}"
 
     - name: Initialise terraform
       run: terraform init
@@ -76,7 +73,6 @@ jobs:
     - name: Check outputs
       run: terraform output
       working-directory: terraform
-
 
     - name: Set up environment variables
       id: set_outputs_rds_ecr
