@@ -8,6 +8,10 @@ on:
 jobs:
   deploy-docker-to-ecs:
     runs-on: self-hosted
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     
     steps:
     - name: Check out repository
@@ -124,7 +128,7 @@ jobs:
 
     - name: Describe ECS task to get container name
       run: |
-        CONTAINER_NAME=$(aws ecs describe-tasks --cluster $ECS_CLUSTER_NAME --tasks $ENI_ID --query "tasks[0].containers[0].name" --output text)
+        CONTAINER_NAME=$(aws ecs describe-tasks --cluster $ECS_CLUSTER_NAME --tasks $TASK_ID --query "tasks[0].containers[0].name" --output text)
         echo "CONTAINER_NAME=$CONTAINER_NAME" >> $GITHUB_ENV
 
     - name: Describe ECS Task to get Public IP
