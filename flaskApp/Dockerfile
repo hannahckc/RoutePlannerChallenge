@@ -16,6 +16,9 @@ COPY . /app
 
 COPY sql/create-local-postgres-db.sql /app/
 
+# Set the PYTHONPATH to the app directory
+ENV PYTHONPATH=/app
+
 # Define build-time arguments
 ARG DB_HOST
 ARG DB_USERNAME
