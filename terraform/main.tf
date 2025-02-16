@@ -11,7 +11,7 @@ module "ecs" {
 }
 
 module "database" {
-  source = "./rds"
+  source = "./rds"  
 
   env                  = terraform.workspace
   allocated_storage    = 30

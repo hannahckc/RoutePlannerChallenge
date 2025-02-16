@@ -9,11 +9,9 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   "Statement": [
     {
       "Action": "sts:AssumeRole",
-
       "Principal": {
         "Service": "ecs-tasks.amazonaws.com"
-      }
-      
+      },
       "Effect": "Allow",
     }
   ]
