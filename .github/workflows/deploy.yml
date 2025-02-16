@@ -121,6 +121,15 @@ jobs:
       run: |
         PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query "NetworkInterfaces[0].Association.PublicIp" --output text )
         echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
+
+    - name: Wait for ECS Task to be reachable
+      run: |
+        echo "Waiting for Flask app to be available at http://${{ env.PUBLIC_IP }}:8080..."
+        until curl -s http://${PUBLIC_IP}:8080 > /dev/null; do
+          echo "Waiting for Flask app to be reachable..."
+          sleep 10
+        done
+        echo "Flask app is now reachable."
     
     - name: Run pytest tests
       run: |
