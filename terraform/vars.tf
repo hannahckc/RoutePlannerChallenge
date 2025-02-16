@@ -38,6 +38,7 @@ variable "vpc_id" {
 
 variable "container_image" {
   type    = string
+  default = ""
 }
 
 variable "db_password" {
