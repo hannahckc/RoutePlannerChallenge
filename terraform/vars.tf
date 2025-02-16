@@ -1,6 +1,5 @@
 variable "project_name" {
   type    = string
-  default = "gatus-uptime"
 }
 
 variable "public_subnets" {
