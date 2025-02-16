@@ -7,7 +7,7 @@ module "ecs" {
   region             = var.region
   container_image    = var.container_image
   env                = terraform.workspace
-  db_password = var.db_password
+  db_password       = var.db_password
 }
 
 module "database" {
@@ -23,6 +23,7 @@ module "database" {
   vpc_id               = var.vpc_id
   db_username          = var.db_username
   db_password          = var.db_password
+  db_name              = var.db_name
 }
 
 module "ecr" {
