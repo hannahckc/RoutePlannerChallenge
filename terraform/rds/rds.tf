@@ -1,12 +1,11 @@
 resource "aws_db_instance" "application_database" {
-  identifier        = "gatus-${var.env}"
+  identifier        = "rds-${var.app_name}-${var.env}"
   allocated_storage = var.allocated_storage
   instance_class    = var.instance_class
 
-  username = var.username
-  password = var.password
-  db_name  = "gatedb"
-
+  username = var.db_username
+  password = var.db_password
+  db_name  = var.db_name
 
   auto_minor_version_upgrade      = true
   backup_retention_period         = var.retention_days

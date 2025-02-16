@@ -1,18 +1,36 @@
 variable "project_name" {
   type    = string
+  default = "route-planner"
+}
+
+variable "db_name" {
+  type = string
+  default = "gatedb"
+}
+
+variable "repository_name" {
+  type = string
+  default = "flask-app-repo"
+}
+
+variable "env" {
+  type    = string
+  default = "testing"
+}
+
+variable "region" {
+  default = "eu-north-1"
+}
+
+variable "db_subnet_group_name" {
+  type = string
+  default = "default"
 }
 
 variable "public_subnets" {
   type = list(string)
 }
 
-variable "db_subnet_group_name" {
-  type = string
-}
-
-variable "region" {
-  default = "eu-north-1"
-}
 
 variable "vpc_id" {
   type = string
@@ -20,12 +38,6 @@ variable "vpc_id" {
 
 variable "container_image" {
   type    = string
-  default = ""
-}
-
-variable "env" {
-  type    = string
-  default = "testing"
 }
 
 variable "db_password" {
@@ -36,18 +48,4 @@ variable "db_username" {
   type = string
 }
 
-variable "username" {
-  type = string
-}
 
-variable "password" {
-  type = string
-}
-
-variable "repository_name" {
-  type = string
-}
-
-variable "db_name" {
-  type = string
-}
