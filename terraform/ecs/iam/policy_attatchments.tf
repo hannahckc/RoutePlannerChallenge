@@ -19,6 +19,13 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_pol_att" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_ssm_policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+
+
 # Attaches policy to interact with SSM (needed for exec policy), 
 # and interact with cloudwatch logs to task role
 
@@ -27,5 +34,9 @@ resource "aws_iam_role_policy_attachment" "ecs_task_role_pol_att" {
   policy_arn = aws_iam_policy.ecs_task_role_policy.arn
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_task_ssm_policy" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
 
 

@@ -35,6 +35,8 @@ resource "aws_ecs_task_definition" "task_definition" {
   # Name of ECS instance
   family = "${var.project_name}-task-${var.env}"
 
+  enableExecuteCommand: true
+
   cpu                      = 256
   memory                   = 512
 

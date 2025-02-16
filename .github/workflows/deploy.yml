@@ -39,6 +39,7 @@ jobs:
     - name: Install session manager plugin
       run: |
         brew install --cask session-manager-plugin
+        session-manager-plugin --version
 
     - name: Set up environment variables
       id: set_outputs_secrets
@@ -157,3 +158,4 @@ jobs:
         --container ${CONTAINER_NAME} \
         --command "pytest" \
         --interactive
+      working-directory: flaskApp
