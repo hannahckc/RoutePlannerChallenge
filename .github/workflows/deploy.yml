@@ -154,12 +154,8 @@ jobs:
 
     - name: Check if exec agent is  running
       run: |
-        aws ecs execute-command \
-        --cluster ${ECS_CLUSTER_NAME} \
-        --task ${TASK_ID} \
-        --container ${CONTAINER_NAME} \
-        --command "ps aux" \
-        --interactive
+        ./check_exec_manager.sh
+      working-directory: scripts
 
     
     - name: Run pytest tests in ECS
