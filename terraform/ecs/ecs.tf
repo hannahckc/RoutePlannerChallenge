@@ -40,6 +40,8 @@ resource "aws_ecs_task_definition" "task_definition" {
   # Serverless container instead of EC2
   requires_compatibilities = ["FARGATE"]
 
+  enable_execute_command   = true
+
   # Gives each task its own Elastic Network Interface (ENI) and private IP
   network_mode             = "awsvpc"
 
