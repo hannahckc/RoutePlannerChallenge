@@ -43,3 +43,11 @@ output "rds_host" {
 output "rds_port" {
   value = module.database.rds_port
 }
+
+output "ecs_cluster_name" {
+  value = module.ecs.ecs_cluster_name
+}
+
+output "ecs_service_name" {
+  value = module.ecs.ecs_service_name
+}
