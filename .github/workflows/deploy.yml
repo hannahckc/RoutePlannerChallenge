@@ -105,6 +105,7 @@ jobs:
       run: |
         echo "CLUSTER_NAME=$(terraform output -raw ecs_cluster_name)" >> $GITHUB_ENV
         echo "SERVICE_NAME=$(terraform output -raw ecs_service_name)" >> $GITHUB_ENV
+      working-directory: terraform
 
     - name: Get ECS Task Public IP
       run: |
