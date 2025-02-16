@@ -21,8 +21,8 @@ module "database" {
   app_name             = var.project_name
   db_subnet_group_name = var.db_subnet_group_name
   vpc_id               = var.vpc_id
-  username          = var.db_username
-  password          = var.db_password
+  db_username          = var.db_username
+  db_password          = var.db_password
 }
 
 module "ecr" {

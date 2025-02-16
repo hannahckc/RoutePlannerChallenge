@@ -30,20 +30,10 @@ variable "app_name" {
   type = string
 }
 
-variable "db_password" {
-  type = string
-}
-
 variable "db_username" {
   type = string
 }
 
-variable "username" {
+variable "db_password" {
   type = string
-  default = ""
-}
-
-variable "password" {
-  type = string
-  default = ""
 }
