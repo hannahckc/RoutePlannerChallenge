@@ -54,17 +54,17 @@ def get_cheapest_route(distance):
     if cost_with_personal_transport < cost_with_hstc_transport:
         results.update({
             'cheapest_vehicle': 'personal_transport',
-            'chapest_cost_per_person' : round(cost_with_personal_transport,2)
+            'cheapest_cost_per_person' : round(cost_with_personal_transport,2)
         })
     elif cost_with_hstc_transport < cost_with_personal_transport:
         results.update({
             'cheapest_vehicle': 'hstc_transport',
-            'chapest_cost_per_person' : round(cost_with_hstc_transport,2)
+            'cheapest_cost_per_person' : round(cost_with_hstc_transport,2)
         })
     else:
         results.update({
             'cheapest_vehicle': 'either!',
-            'chapest_cost_per_person' : round(cost_with_personal_transport,2)
+            'cheapest_cost_per_person' : round(cost_with_personal_transport,2)
         })
 
     return jsonify(results)

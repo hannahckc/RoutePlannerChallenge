@@ -47,12 +47,12 @@ jobs:
       run: terraform init
       working-directory: terraform
 
-    - name: Destroy terraform
-      run: |
-        terraform destroy -auto-approve \
-        -var "db_username=$DB_USERNAME" \
-        -var "db_password=$DB_PASSWORD" \
-      working-directory: terraform
+    #- name: Destroy terraform
+    #  run: |
+     #   terraform destroy -auto-approve \
+     #   -var "db_username=$DB_USERNAME" \
+     #   -var "db_password=$DB_PASSWORD" \
+     # working-directory: terraform
 
     - name: Apply terraform for rds
       run: |
@@ -75,7 +75,6 @@ jobs:
       working-directory: terraform
 
     - name: Set up environment variables
-      id: set_outputs_rds_ecr
       run: |
         echo "DB_HOST=$(terraform output -raw rds_host)" >> $GITHUB_ENV
         echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV 
@@ -101,3 +100,21 @@ jobs:
             -var "db_username=$DB_USERNAME" \
             -var "db_password=$DB_PASSWORD" \
       working-directory: terraform
+
+    - name: Get outputs from ECS
+      run: |
+        echo "CLUSTER_NAME=$(terraform output -raw ecs_cluster_name)" >> $GITHUB_ENV
+        echo "SERVICE_NAME=$(terraform output -raw ecs_service_name)" >> $GITHUB_ENV
+
+    - name: Get ECS Task Public IP
+      run: |
+          # Get the Task ID for the latest running task (replace with your actual ECS task query logic)
+          TASK_ID=$(aws ecs list-tasks --cluster $ECS_CLUSTER_NAME --service-name $ECS_SERVICE_NAME --query "taskArns[0]" --output text)
+          
+          # Get public IP of the task (if using Fargate)
+          PUBLIC_IP=$(aws ecs describe-tasks --cluster $ECS_CLUSTER_NAME --tasks $TASK_ID --query "tasks[0].attachments[0].details[?name=='publicIPv4'].value" --output text)
+          
+          echo "ECS Task Public IP: $PUBLIC_IP"
+
+          # Set URL as an environment variable for the test
+          echo "ECS_URL=http://$PUBLIC_IP:8080" >> $GITHUB_ENV

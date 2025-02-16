@@ -38,7 +38,7 @@ def get_cheapest_route_between_gates(gateCode, targetGateCode):
                     cost:
                         type: number
                         format: float
-                    distanct:
+                    distance:
                         type: integer
 
 """
