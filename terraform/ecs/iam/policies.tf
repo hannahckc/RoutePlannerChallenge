@@ -1,6 +1,6 @@
 # Generates an IAM policy document to allow creation of log groups in Cloudwatch for task execution role
 
-data "aws_iam_policy_document" "ecs_task_execution_policy_logs" {
+data "aws_iam_policy_document" "ecs_task_execution_policy_logs_document" {
   statement {
     actions = [
       "logs:CreateLogGroup"
@@ -13,7 +13,7 @@ data "aws_iam_policy_document" "ecs_task_execution_policy_logs" {
 
 resource "aws_iam_policy" "ecs_task_execution_role_policy_logs" {
   name   = "${var.project_name}-task-exec-role-policy-${var.env}"
-  policy = data.aws_iam_policy_document.ecs_task_execution_policy_logs.json
+  policy = data.aws_iam_policy_document.ecs_task_execution_policy_logs_document.json
 }
 
 # Create policy document for task role to allow SSM and CloudWatch interaction 
