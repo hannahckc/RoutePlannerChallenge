@@ -151,6 +151,16 @@ jobs:
       run: |
         PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query "NetworkInterfaces[0].Association.PublicIp" --output text )
         echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
+
+    - name: Check if exec agent is  running
+      run: |
+        aws ecs execute-command \
+        --cluster ${ECS_CLUSTER_NAME} \
+        --task ${TASK_ID} \
+        --container ${CONTAINER_NAME} \
+        --command "ps aux" \
+        --interactive
+
     
     - name: Run pytest tests in ECS
       run: |
