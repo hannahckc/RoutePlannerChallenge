@@ -107,15 +107,25 @@ jobs:
         echo "ECS_SERVICE_NAME=$(terraform output -raw ecs_service_name)" >> $GITHUB_ENV
       working-directory: terraform
 
-    - name: Get most recent ECS task ARN
+    - name: Get most recent ECS task ARN and ID
       run: |
         TASK_ARN=$(aws ecs list-tasks --cluster $ECS_CLUSTER_NAME --desired-status RUNNING --query "taskArns | [0]" --output text)
         echo "TASK_ARN=$TASK_ARN" >> $GITHUB_ENV
+
+        # Extract Task ID from ARN
+       TASK_ID=$(echo $TASK_ARN | awk -F'/' '{print $2}')
+    
+    echo "TASK_ID=$TASK_ID" >> $GITHUB_ENV
 
     - name: Describe ECS Task to get ENI ID
       run: |
         ENI_ID=$(aws ecs describe-tasks --cluster $ECS_CLUSTER_NAME --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name=='networkInterfaceId'].value" --output text)
         echo "ENI_ID=$ENI_ID" >> $GITHUB_ENV
+
+    - name: Describe ECS task to get container name
+      run: |
+        CONTAINER_NAME=$(aws ecs describe-tasks --cluster $ECS_CLUSTER_NAME --tasks $ENI_ID --query "tasks[0].containers[0].name" --output text)
+        echo "CONTAINER_NAME=$CONTAINER_NAME" >> $GITHUB_ENV
 
     - name: Describe ECS Task to get Public IP
       run: |
@@ -131,6 +141,11 @@ jobs:
         done
         echo "Flask app is now reachable."
     
-    - name: Run pytest tests
+    - name: Run pytest tests in ECS
       run: |
-        pytest --maxfail=1 --disable-warnings -q --base-url http://${PUBLIC_IP}:8080
+        aws ecs execute-command \
+        --cluster ${ECS_CLUSTER_NAME} \
+        --task ${TASK_ID} \
+        --container${CONTAINER_NAME} \
+        --command "pytest" \
+        --interactive
