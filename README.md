@@ -94,24 +94,6 @@ You will need an AWS account, and to create an IAM role. You can do this in the 
 </li>
 </ul>
 
-<h3> Github secrets </h3>
-This code runs as a workflow on Github, so you will need to have a Github account to run it.
-You will need to add the following secrets (check the names are exactly like this):
-<ul>
-<li> 
-    <b>DB_USERNAME</b> - An RDS instance with a Postgres database is created. It requires you to set a username for the database.
-</li>
-<li> 
-    <b>DB_PASSWORD</b> - Similary, a password that will be used to access the RDS.
-</li>
-<li>
-    <b>AWS_ACCESS_KEY_ID</b> - The contents of your the access key you should have copied above.
-</li>
-<li>
-    <b>AWS_SECRET_ACCESS_KEY</b> - The contents of the secret access key you copied above. These AWS credentials mean the commands are associated with your AWS account and are run by a user with the correct permissions.
-</li>
-</ul>
-
 <h3> Create a VPC and subnets </h3>
 For the RDS and ECS to run, you need to create a VPC with some public subnets. You can do this on the AWS console. 
 <ul>
@@ -132,35 +114,36 @@ For the RDS and ECS to run, you need to create a VPC with some public subnets. Y
 </li>
 </ul>
 
+<h3> Github secrets </h3>
+This code runs as a workflow on Github, so you will need to have a Github account to run it.
+You will need to add the following secrets (check the names are exactly like this):
+<ul>
+<li> 
+    <b>DB_USERNAME</b> - An RDS instance with a Postgres database is created. It requires you to set a username for the database.
+</li>
+<li> 
+    <b>DB_PASSWORD</b> - Similary, a password that will be used to access the RDS.
+</li>
+<li>
+    <b>AWS_ACCESS_KEY_ID</b> - The contents of your the access key you should have copied above.
+</li>
+<li>
+    <b>AWS_SECRET_ACCESS_KEY</b> - The contents of the secret access key you copied above. These AWS credentials mean the commands are associated with your AWS account and are run by a user with the correct permissions.
+</li>
+<li>
+    <b>VPC_ID</b> - The ID of the VPC you created above 
+</li>
+</ul>
+
 <h3> Create Github runner </h3>
 You need to create a runner for the Github actions to run on. Go to Settings -> Actions -> Runners and create a self-hosted runner. This should be <b>macOS</b> and <b>arm64</b>
 
 
 <h3> Terraform variables </h3>
-There are a couple of compulsory and some optional variables you can pass into terraform for setting up your ECR, RDS and ECS instances. 
+There are a several optional variables you can pass into terraform for setting up your ECR, RDS and ECS instances. 
 <br><br>
-Create a <b>terraform.tfvars</b> file in the terraform directory.
+Create a <b>terraform.tfvars</b> file in the terraform directory. This will need to be pushed to the repo to be used bi Github actions.
 <br><br>
-</h4>Compulsory</h4>
-
-<ul>
-<li>
-    <b>vpc_id</b> - The ID of the VPC you created above 
-</li>
-<li>
-    <b>public_subnets</b> - A list of the subnets associated with the VPC you created
-</li>
-</ul>
-
-So your file might look like:
-```
-public_subnets = ["subnet-abc123", "subnet-g4b5"]
-
-vpc_id = "vpc-sjfi1930"
-```
-<h4>Optional</h4>
-
-You can also add other arguments to the tfvars file, if you dont want to use the defaults
 <ul>
 <li>
     project_name: Used in naming your AWS resources, security group etc. Default is route-planner.
