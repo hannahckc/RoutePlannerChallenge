@@ -2,9 +2,6 @@ name: Deploy ECS and RDS instances
 
 on:
   workflow_dispatch: 
-  push:
-    branches:
-      - createApp
 
 jobs:
   deploy-docker-to-ecs:
