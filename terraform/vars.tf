@@ -31,6 +31,9 @@ variable "public_subnets" {
   type = list(string)
 }
 
+locals {
+  decoded_public_subnets = jsondecode(var.public_subnets)
+}
 
 variable "vpc_id" {
   type = string
