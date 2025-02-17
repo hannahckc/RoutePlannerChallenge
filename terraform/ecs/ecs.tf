@@ -1,15 +1,8 @@
-# Fetch the VPC based on the VPC ID
-data "aws_vpc" "selected_vpc" {
-  id = var.vpc_id
-}
-
 # Fetch the public subnets associated with the selected VPC
 data "aws_subnets" "vpc_public_subnets" {
-  vpc_id = data.aws_vpc.selected_vpc.id
-
-  filter {
-    name   = "tag:Name"
-    values = ["public*"]  # Use an appropriate tag to select public subnets
+   filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
   }
 }
 
