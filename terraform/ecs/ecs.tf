@@ -4,7 +4,7 @@ data "aws_vpc" "selected_vpc" {
 }
 
 # Fetch the public subnets associated with the selected VPC
-data "aws_subnets" "public_subnets" {
+data "aws_subnets" "vpc_public_subnets" {
   vpc_id = data.aws_vpc.selected_vpc.id
 
   filter {
@@ -165,8 +165,8 @@ resource "aws_ecs_service" "service" {
   network_configuration {
 
     # Defines the subnets in which the ECS tasks will run
-    subnets          = data.aws_subnets.public_subnets.ids
-    
+    subnets          = data.aws_subnets.vpc_public_subnets.ids
+
     # Specifies the security groups that will be applied to the ECS service's tasks
     security_groups  = [aws_security_group.service_security_group.id]
 
