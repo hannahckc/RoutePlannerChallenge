@@ -2,6 +2,9 @@ name: Deploy ECS and RDS instances
 
 on:
   workflow_dispatch: 
+  push:
+    branches:
+      - createApp
 
 jobs:
   deploy-docker-to-ecs:
@@ -44,11 +47,15 @@ jobs:
       run: |
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV # Set output
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV  # Set output          
+          echo "VPC_ID=${{ secrets.VPC_ID }}" >> $GITHUB_ENV # Set output
+          echo "PUBLIC_SUBNETS=${{ secrets.PUBLIC_SUBNETS }}" >> $GITHUB_ENV  # Set output          
 
     - name: Check env vars
       run: |
         echo "PASSWORD: ${DB_PASSWORD}"
         echo "USER: ${DB_USERNAME}"
+        echo "VPC: ${VPC_ID}"
+        echo "SUBNETS: ${PUBLIC_SUBNETS}"
 
     - name: Initialise terraform
       run: terraform init
@@ -67,6 +74,8 @@ jobs:
         -target=module.database \
         -var "db_username=$DB_USERNAME" \
         -var "db_password=$DB_PASSWORD" \
+        -var "vpc_id=$VPC_ID" \
+        -var "public_subnets=$PUBLIC_SUBNETS" 
       working-directory: terraform
 
     - name: Apply terraform for ecr
@@ -75,6 +84,8 @@ jobs:
         -target=module.ecr \
         -var "db_username=$DB_USERNAME" \
         -var "db_password=$DB_PASSWORD" \
+        -var "vpc_id=$VPC_ID" \
+        -var "public_subnets=$PUBLIC_SUBNETS" 
       working-directory: terraform
 
     - name: Check outputs
@@ -108,6 +119,8 @@ jobs:
             -var "container_image=$ECR_WITH_TAG" \
             -var "db_username=$DB_USERNAME" \
             -var "db_password=$DB_PASSWORD" \
+            -var "vpc_id=$VPC_ID" \
+            -var "public_subnets=$PUBLIC_SUBNETS" 
       working-directory: terraform
 
     - name: Get outputs from ECS
