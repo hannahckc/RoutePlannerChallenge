@@ -1,0 +1,175 @@
+name: Deploy ECS and RDS instances
+
+on:
+  workflow_dispatch: 
+
+jobs:
+  deploy-docker-to-ecs:
+    runs-on: self-hosted
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    
+    - name: Set up Homebrew
+      run: |
+        if ! command -v brew &> /dev/null; then
+          echo "Homebrew not found, installing..."
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" < /dev/null
+          echo "export PATH=/opt/homebrew/bin:$PATH" >> $GITHUB_ENV  # Ensure Homebrew is in PATH
+        else
+          echo "Homebrew already installed"
+        fi
+
+    - name: Install PostgreSQL client using Homebrew
+      run: |
+        brew install postgresql
+
+    - name: Install AWS CLI via Homebrew
+      run: |
+        brew install awscli
+        aws --version
+
+    - name: Install session manager plugin
+      run: |
+        brew install --cask session-manager-plugin
+        session-manager-plugin --version
+
+    - name: Set up environment variables
+      id: set_outputs_secrets
+      run: |
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV # Set output
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV  # Set output          
+          echo "VPC_ID=${{ secrets.VPC_ID }}" >> $GITHUB_ENV # Set output
+
+    - name: Check env vars
+      run: |
+        echo "PASSWORD: ${DB_PASSWORD}"
+        echo "USER: ${DB_USERNAME}"
+        echo "VPC: ${VPC_ID}"
+
+    - name: Initialise terraform
+      run: terraform init
+      working-directory: terraform
+
+    #- name: Destroy terraform
+    #  run: |
+     #   terraform destroy -auto-approve \
+     #   -var "db_username=$DB_USERNAME" \
+     #   -var "db_password=$DB_PASSWORD" \
+     # working-directory: terraform
+
+    - name: Apply terraform for rds
+      run: |
+        terraform apply -auto-approve \
+        -target=module.database \
+        -var "db_username=$DB_USERNAME" \
+        -var "db_password=$DB_PASSWORD" \
+        -var "vpc_id=$VPC_ID" \
+      working-directory: terraform
+
+    - name: Apply terraform for ecr
+      run: |
+        terraform apply -auto-approve \
+        -target=module.ecr \
+        -var "db_username=$DB_USERNAME" \
+        -var "db_password=$DB_PASSWORD" \
+        -var "vpc_id=$VPC_ID" \
+      working-directory: terraform
+
+    - name: Check outputs
+      run: terraform output
+      working-directory: terraform
+
+    - name: Set up environment variables
+      run: |
+        echo "DB_HOST=$(terraform output -raw rds_host)" >> $GITHUB_ENV
+        echo "DB_PORT=$(terraform output -raw rds_port)" >> $GITHUB_ENV 
+        echo "ECR_URI=$(terraform output -raw repository_url)" >> $GITHUB_ENV
+
+      working-directory: terraform
+
+    - name: Make scripts executable
+      run: |
+        chmod +x scripts/deploy.sh
+        chmod +x scripts/check_exec_manager.sh
+      working-directory: ${{ github.workspace }}
+
+    - name: Run deploy docker script
+      run: |
+        ./scripts/deploy.sh v1.0
+      working-directory: ${{ github.workspace }}
+      shell: bash
+
+    - name: Create ECS instance containing docker image
+      run: |
+            terraform apply -auto-approve \
+            -target=module.ecs \
+            -var "container_image=$ECR_WITH_TAG" \
+            -var "db_username=$DB_USERNAME" \
+            -var "db_password=$DB_PASSWORD" \
+            -var "vpc_id=$VPC_ID" \
+      working-directory: terraform
+
+    - name: Get outputs from ECS
+      run: |
+        echo "ECS_CLUSTER_NAME=$(terraform output -raw ecs_cluster_name)" >> $GITHUB_ENV
+        echo "ECS_SERVICE_NAME=$(terraform output -raw ecs_service_name)" >> $GITHUB_ENV
+      working-directory: terraform
+
+    - name: Get most recent ECS task ARN and ID
+      run: |
+        echo "Waiting for ECS task to start..."
+
+        while true; do
+            TASK_ARN=$(aws ecs list-tasks --cluster $ECS_CLUSTER_NAME --desired-status RUNNING --query "taskArns | [0]" --output text)
+            
+            if [[ "$TASK_ARN" != "None" && -n "$TASK_ARN" ]]; then
+                echo "ECS task is running: $TASK_ARN"
+                echo "TASK_ARN=$TASK_ARN" >> $GITHUB_ENV
+                
+                TASK_ID=$(echo $TASK_ARN | awk -F'/' '{print $3}')
+                echo "TASK_ID=$TASK_ID" >> $GITHUB_ENV
+                break
+            fi
+
+            echo "No running task found. Retrying in 5 seconds..."
+            sleep 5
+        done
+        
+
+    - name: Describe ECS Task to get ENI ID
+      run: |
+        ENI_ID=$(aws ecs describe-tasks --cluster $ECS_CLUSTER_NAME --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name=='networkInterfaceId'].value" --output text)
+        echo "ENI_ID=$ENI_ID" >> $GITHUB_ENV
+
+    - name: Describe ECS task to get container name
+      run: |
+        CONTAINER_NAME=$(aws ecs describe-tasks --cluster $ECS_CLUSTER_NAME --tasks $TASK_ID --query "tasks[0].containers[0].name" --output text)
+        echo "CONTAINER_NAME=$CONTAINER_NAME" >> $GITHUB_ENV
+
+    - name: Describe ECS Task to get Public IP
+      run: |
+        PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query "NetworkInterfaces[0].Association.PublicIp" --output text )
+        echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
+
+    - name: Check if exec agent is  running
+      run: |
+        ./check_exec_manager.sh
+      working-directory: scripts
+
+    
+    - name: Run pytest tests in ECS
+      run: |
+        aws ecs execute-command \
+        --cluster ${ECS_CLUSTER_NAME} \
+        --task ${TASK_ID} \
+        --container ${CONTAINER_NAME} \
+        --command "pytest" \
+        --interactive \
+        --debug
+      working-directory: flaskApp
