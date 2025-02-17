@@ -1,3 +1,18 @@
+# Fetch the VPC based on the VPC ID
+data "aws_vpc" "selected_vpc" {
+  id = var.vpc_id
+}
+
+# Fetch the public subnets associated with the selected VPC
+data "aws_subnets" "public_subnets" {
+  vpc_id = data.aws_vpc.selected_vpc.id
+
+  filter {
+    name   = "tag:Name"
+    values = ["public*"]  # Use an appropriate tag to select public subnets
+  }
+}
+
 # Store logs from ECS
 resource "aws_cloudwatch_log_group" "ecs_log_group" {
   name = "/aws/ecs/${var.project_name}-cluster-${var.env}"
@@ -150,8 +165,8 @@ resource "aws_ecs_service" "service" {
   network_configuration {
 
     # Defines the subnets in which the ECS tasks will run
-    subnets          = var.public_subnets
-
+    subnets          = data.aws_subnets.public_subnets.ids
+    
     # Specifies the security groups that will be applied to the ECS service's tasks
     security_groups  = [aws_security_group.service_security_group.id]
 
