@@ -2,7 +2,6 @@
 module "ecs" {
   source             = "./ecs"
   project_name       = var.project_name
-  public_subnets     = var.public_subnets
   vpc_id             = var.vpc_id
   region             = var.region
   container_image    = var.container_image
